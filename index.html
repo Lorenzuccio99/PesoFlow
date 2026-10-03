@@ -381,6 +381,44 @@ button,input,select,textarea,a{touch-action:manipulation!important}
   .sheet .primary{padding:11px 13px!important}
 }
 
+
+
+/* v1.3 layout fixes for iPhone */
+html,body{height:100%;overflow:hidden;overscroll-behavior:none;background:
+  radial-gradient(circle at 18% 10%, rgba(140,76,255,.18) 0, rgba(140,76,255,0) 24%),
+  radial-gradient(circle at 88% 10%, rgba(73,138,255,.22) 0, rgba(73,138,255,0) 24%),
+  radial-gradient(circle at 70% 92%, rgba(49,170,255,.18) 0, rgba(49,170,255,0) 28%),
+  radial-gradient(circle at 18% 96%, rgba(108,214,255,.14) 0, rgba(108,214,255,0) 25%),
+  linear-gradient(180deg,#081225 0%,#0b1730 48%,#102946 100%) !important}
+body{min-height:100dvh;position:fixed;inset:0;width:100%}
+.shell{max-width:430px;height:100dvh;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding:calc(env(safe-area-inset-top) + 22px) 14px calc(78px + env(safe-area-inset-bottom)) !important;background:transparent}
+.top{padding:8px 2px 20px !important;min-height:108px !important}
+.liveDate{font-size:15px !important}
+.liveTime{font-size:29px !important;line-height:1.05 !important}
+
+/* dock lower and closer to the corners */
+nav#bottomDock{display:flex !important;justify-content:space-between !important;align-items:flex-end !important;left:50% !important;transform:translateX(-50%) !important;width:min(430px,calc(100% - 8px)) !important;max-width:430px !important;padding:0 4px !important;bottom:calc(env(safe-area-inset-bottom) + 2px) !important;gap:10px !important;background:transparent !important;border:0 !important;box-shadow:none !important;backdrop-filter:none !important;-webkit-backdrop-filter:none !important}
+#bottomDock .dockLeft{padding:6px 8px !important;border-radius:28px !important}
+#bottomDock .dockHome{padding:6px !important;border-radius:28px !important}
+#bottomDock .dockCluster{margin:0 !important}
+#bottomDock.dockHidden{transform:translate(-50%,92px) !important;opacity:0 !important}
+
+/* modal sheet sizing and field width */
+.modal{padding-top:env(safe-area-inset-top);align-items:flex-end}
+.sheet{box-sizing:border-box;width:min(430px,calc(100% - 12px)) !important;max-width:430px !important;max-height:76dvh !important;overflow:auto !important;border-radius:30px 30px 0 0 !important;padding:14px 14px calc(14px + env(safe-area-inset-bottom)) !important;margin:0 auto !important}
+.sheet .setting,.sheet form,.sheet .row,.sheet .row.between{width:100%;min-width:0}
+.sheet .setting{overflow:hidden}
+.sheet input,.sheet select,.sheet textarea{display:block;width:100% !important;max-width:100% !important;min-width:0 !important;box-sizing:border-box !important}
+#entryDate,#entryTime{padding-left:12px !important;padding-right:12px !important;text-align:center;-webkit-appearance:none;appearance:none}
+input[type="date"]::-webkit-date-and-time-value,input[type="time"]::-webkit-date-and-time-value{text-align:center}
+input[type="date"]::-webkit-calendar-picker-indicator,input[type="time"]::-webkit-calendar-picker-indicator{opacity:.92}
+.sheet textarea{min-height:84px !important;resize:none}
+.sheet .primary{margin-top:8px}
+.sheet .hint{padding-bottom:4px}
+
+/* avoid bottom dark band feeling */
+.page:last-child,.card:last-child{margin-bottom:0}
+
 </style>
 
 <meta name="theme-color" content="#0b1730">
@@ -1096,7 +1134,8 @@ document.addEventListener('pointerdown', (e) => {
  void btn.offsetWidth;
  btn.classList.add('ripple');
 });
-window.addEventListener('scroll', ()=>{ const nav=document.getElementById('bottomDock'); if(!nav) return; nav.classList.add('dockHidden'); clearTimeout(navScrollTimer); navScrollTimer=setTimeout(()=>nav.classList.remove('dockHidden'), 160); }, {passive:true});
+window.const dockScrollTarget = document.querySelector('.shell') || window;
+dockScrollTarget.addEventListener('scroll', ()=>{ const nav=document.getElementById('bottomDock'); if(!nav) return; nav.classList.add('dockHidden'); clearTimeout(navScrollTimer); navScrollTimer=setTimeout(()=>nav.classList.remove('dockHidden'), 180); }, {passive:true});
 function updateLiveClock(){
  const now = new Date();
  const dateText = now.toLocaleDateString('it-IT',{

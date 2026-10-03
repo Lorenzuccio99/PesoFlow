@@ -39,3 +39,11 @@ Sostituisci `index.html` con la nuova versione e, se modifichi gli asset, cambia
 - finestra Registra peso limitata al 76% del viewport con scroll interno
 - zoom/pinch e doppio tap zoom disabilitati nell'interfaccia PWA
 - cache PWA aggiornata a v12 per forzare il refresh della nuova UI
+
+
+## Aggiornamento v1.3
+- campi Data e Orario del modal ottimizzati alla larghezza del riquadro
+- dock abbassato e spinto di più verso gli angoli
+- scroll del dock: sparisce durante lo scorrimento e ritorna quando ti fermi
+- sfondo esteso e reso più coerente nella parte bassa per evitare l'effetto banda scura
+- sheet Registra peso ridotto e contenuto entro lo schermo su iPhone 15
