@@ -510,6 +510,53 @@ nav#bottomDock{
   padding-left:8px!important;padding-right:8px!important;
 }
 
+
+/* v1.4.2: true optical centering for iOS native date/time controls */
+.centeredNativeControl{
+  position:relative!important;
+  height:48px!important;
+  display:grid!important;
+  place-items:center!important;
+  overflow:hidden!important;
+}
+.centeredNativeControl .nativeDisplay{
+  position:absolute!important;
+  inset:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  text-align:center!important;
+  width:100%!important;
+  padding:0 12px!important;
+  box-sizing:border-box!important;
+  color:#fff!important;
+  font-size:16px!important;
+  line-height:1!important;
+  font-variant-numeric:tabular-nums!important;
+  pointer-events:none!important;
+  z-index:1!important;
+}
+.centeredNativeControl input[type="date"],
+.centeredNativeControl input[type="time"]{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  opacity:.001!important;
+  color:transparent!important;
+  background:transparent!important;
+  z-index:2!important;
+  cursor:pointer!important;
+  -webkit-appearance:none!important;
+  appearance:none!important;
+}
+.centeredNativeControl input::-webkit-date-and-time-value,
+.centeredNativeControl input::-webkit-datetime-edit,
+.centeredNativeControl input::-webkit-calendar-picker-indicator{opacity:0!important;color:transparent!important}
+
 </style>
 
 <meta name="theme-color" content="#173a55">
@@ -658,8 +705,8 @@ nav#bottomDock{
 <div id="modal" class="modal" onclick="if(event.target===this)closeModal()">
   <div class="sheet">
     <div class="row between"><h2>Registra peso</h2><button class="secondary" onclick="closeModal()">Chiudi</button></div>
-    <div class="setting"><label>Data</label><div class="nativeControl"><input id="entryDate" type="date"></div></div>
-    <div class="setting"><label>Orario</label><div class="nativeControl"><input id="entryTime" type="time" value="07:00"></div></div>
+    <div class="setting"><label>Data</label><div class="nativeControl centeredNativeControl"><span id="entryDateDisplay" class="nativeDisplay">—</span><input id="entryDate" type="date" aria-label="Data"></div></div>
+    <div class="setting"><label>Orario</label><div class="nativeControl centeredNativeControl"><span id="entryTimeDisplay" class="nativeDisplay">—</span><input id="entryTime" type="time" value="07:00" aria-label="Orario"></div></div>
     <div class="setting"><label>Peso (kg)</label><input id="entryWeight" type="text" inputmode="decimal" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="72,0"></div>
     <div class="setting"><label>Quando ti sei pesato?</label><select id="entryTiming"><option value="a digiuno">A digiuno</option><option value="in mattinata">In mattinata</option><option value="nel pomeriggio">Nel pomeriggio</option><option value="dopo allenamento">Dopo allenamento</option><option value="di sera">Di sera</option></select></div>
     <div class="setting"><label>Nota opzionale</label><textarea id="entryNote" rows="3" placeholder="Es. cena più salata, viaggio..."></textarea></div>
@@ -682,6 +729,21 @@ let navScrollTimer = null;
 function isoLocal(d){const x=new Date(d); x.setMinutes(x.getMinutes()-x.getTimezoneOffset()); return x.toISOString().slice(0,10)}
 function today(){return isoLocal(new Date())}
 function nowTime(){const d=new Date(); return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
+function formatEntryDateDisplay(value){
+ if(!value) return '—';
+ const [y,m,d]=value.split('-').map(Number);
+ const dt=new Date(y,m-1,d);
+ return dt.toLocaleDateString('it-IT',{day:'numeric',month:'short',year:'numeric'}).replace('.', '');
+}
+function syncNativeDisplays(){
+ const date=document.getElementById('entryDate')?.value||'';
+ const time=document.getElementById('entryTime')?.value||'';
+ const dateDisplay=document.getElementById('entryDateDisplay');
+ const timeDisplay=document.getElementById('entryTimeDisplay');
+ if(dateDisplay) dateDisplay.textContent=formatEntryDateDisplay(date);
+ if(timeDisplay) timeDisplay.textContent=time||'—';
+}
+
 function entryTiming(e){if(e.timing) return e.timing; if(e.workout) return 'dopo allenamento'; if(e.fasting) return 'a digiuno'; return 'in mattinata';}
 function metricKg(value, d=2){return `<span class="metricValue"><span class="metricNumber">${fmt(value,d)}</span><span class="metricUnit">kg</span></span>`}
 function parseDate(s){return new Date(s+'T12:00:00')}
@@ -1074,6 +1136,7 @@ function openModal(){
  document.getElementById('entryWeight').value='';
  document.getElementById('entryTiming').value='a digiuno';
  document.getElementById('entryNote').value='';
+ syncNativeDisplays();
  editingEntryDate = null;
  document.getElementById('deleteEntryBtn').style.display='none';
  document.getElementById('modal').classList.add('open');
@@ -1082,8 +1145,8 @@ function closeModal(){
  document.getElementById('modal').classList.remove('open');
  editingEntryDate = null;
 }
-document.getElementById('entryDate').addEventListener('change',loadForDate);
-document.getElementById('entryTime').addEventListener('change',loadForDate);
+document.getElementById('entryDate').addEventListener('change',()=>{syncNativeDisplays();loadForDate();});
+document.getElementById('entryTime').addEventListener('change',()=>{syncNativeDisplays();loadForDate();});
 const entryWeightInput=document.getElementById('entryWeight');
 entryWeightInput.addEventListener('input',()=>{
  let v=entryWeightInput.value.replace(/[^0-9.,]/g,'').replace(/,/g,'.');
@@ -1096,6 +1159,7 @@ entryWeightInput.addEventListener('input',()=>{
  entryWeightInput.value=v.replace('.',',');
 });
 function loadForDate(){
+ syncNativeDisplays();
  const d=document.getElementById('entryDate').value;
  const t=document.getElementById('entryTime').value || '07:00';
  const e=entries.find(x=>x.date===d && (x.time||'07:00')===t);
@@ -1123,6 +1187,7 @@ function editEntry(date, time){
  document.getElementById('entryWeight').value = e.weight;
  document.getElementById('entryTiming').value = entryTiming(e);
  document.getElementById('entryNote').value = e.note || '';
+ syncNativeDisplays();
  document.getElementById('deleteEntryBtn').style.display='block';
  document.getElementById('modal').classList.add('open');
 }

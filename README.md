@@ -34,3 +34,8 @@ Ricostruzione pulita del layout iPhone dalla PWA stabile: nessun body fixed, nes
 - tastiera numerica/decimale dedicata per il peso con filtro dei caratteri non numerici
 - Data e Orario centrati nei controlli iOS
 - dock alzato leggermente rispetto al bordo inferiore seguendo la curva dell’iPhone
+
+
+## v1.4.2
+- Data e Orario centrati otticamente su iOS tramite un testo visuale indipendente dal controllo nativo.
+- Il tap continua ad aprire il picker nativo iOS.
