@@ -298,6 +298,46 @@ body::after{width:300px;height:300px;right:-90px;top:320px;border-radius:61% 39%
 .dockCluster:has(button.active){background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.22);box-shadow:0 18px 48px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.28)}
 .coachConfidence{margin-top:10px;padding:10px 12px;border-radius:16px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08);font-size:12px;color:rgba(235,242,255,.78)}
 
+
+
+/* v1.1 iPhone polish */
+html{height:100%;background:#081120;overscroll-behavior:none;-webkit-text-size-adjust:100%}
+body{position:fixed;inset:0;min-height:100dvh;width:100%;overflow:hidden;background-color:#081120;overscroll-behavior:none}
+.shell{max-width:430px;margin:0 auto;height:100dvh;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding:calc(10px + env(safe-area-inset-top)) 14px calc(108px + env(safe-area-inset-bottom))}
+.top{padding-top:4px}
+
+/* remove outer dock bar, keep only transparent pill buttons */
+nav#bottomDock{background:transparent!important;border:0!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;padding:0!important;width:min(420px,calc(100% - 24px));bottom:calc(10px + env(safe-area-inset-bottom));gap:16px}
+nav#bottomDock::before{display:none!important}
+#bottomDock .dockCluster{background:rgba(255,255,255,.12)!important;border:1px solid rgba(255,255,255,.16)!important;box-shadow:0 16px 36px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.22)!important;backdrop-filter:blur(28px) saturate(165%);-webkit-backdrop-filter:blur(28px) saturate(165%)}
+#bottomDock .dockCluster::before{display:none!important}
+#bottomDock .dockLeft{padding:6px 7px}
+#bottomDock .dockHome{padding:6px}
+#bottomDock button{background:rgba(255,255,255,.01);border-radius:19px}
+#bottomDock button.active{background:linear-gradient(180deg,rgba(255,255,255,.20),rgba(255,255,255,.09))!important}
+
+/* better modal sizing for iPhone 15 */
+.modal{padding-top:env(safe-area-inset-top);align-items:flex-end}
+.sheet{width:min(430px,100%);max-height:calc(100dvh - env(safe-area-inset-top) - 8px);border-radius:28px 28px 0 0;padding:14px 14px calc(14px + env(safe-area-inset-bottom));overflow:auto;scrollbar-width:none}
+.sheet::-webkit-scrollbar{display:none}
+.sheet h2{margin:0;font-size:18px;line-height:1.15}
+.sheet .row.between{align-items:center;margin-bottom:10px;position:sticky;top:0;z-index:2;padding-bottom:8px;background:linear-gradient(180deg,rgba(16,26,41,.98),rgba(16,26,41,.92),rgba(16,26,41,0))}
+.sheetClose{padding:11px 16px;border-radius:18px;min-width:96px}
+.sheet .setting{margin:10px 0}
+.sheet .setting label{margin-bottom:6px;font-size:12px}
+.sheet textarea,.sheet input,.sheet select{padding:12px 14px;border-radius:18px}
+.sheet textarea{min-height:92px;resize:vertical}
+.sheet .primary{margin-top:10px;padding:13px 16px;border-radius:20px}
+.sheet .hint{margin-top:8px;font-size:11px}
+#deleteEntryBtn{margin-top:8px!important}
+@media (max-height: 860px){
+  .sheet{padding:12px 12px calc(12px + env(safe-area-inset-bottom));max-height:calc(100dvh - env(safe-area-inset-top) - 4px)}
+  .sheet .setting{margin:8px 0}
+  .sheet textarea,.sheet input,.sheet select{padding:11px 13px}
+  .sheet textarea{min-height:78px}
+  .sheet h2{font-size:17px}
+}
+
 </style>
 
 <meta name="theme-color" content="#0b1730">
@@ -444,7 +484,7 @@ body::after{width:300px;height:300px;right:-90px;top:320px;border-radius:61% 39%
 
 <div id="modal" class="modal" onclick="if(event.target===this)closeModal()">
   <div class="sheet">
-    <div class="row between"><h2>Registra peso</h2><button class="secondary" onclick="closeModal()">Chiudi</button></div>
+    <div class="row between"><h2>Registra peso</h2><button class="secondary sheetClose" onclick="closeModal()">Chiudi</button></div>
     <div class="setting"><label>Data</label><input id="entryDate" type="date"></div>
     <div class="setting"><label>Orario</label><input id="entryTime" type="time" value="07:00"></div>
     <div class="setting"><label>Peso (kg)</label><input id="entryWeight" type="number" step="0.1" min="20" max="400" placeholder="72.0"></div>

@@ -24,3 +24,9 @@ Questa cartella contiene la versione web installabile di PesoFlow.
 
 ## Aggiornamenti futuri
 Sostituisci `index.html` con la nuova versione e, se modifichi gli asset, cambia il valore di `CACHE_NAME` in `sw.js` (es. `pesoflow-pwa-v2`) per forzare l'aggiornamento della cache.
+
+
+## Aggiornamento v1.1
+- eliminato l'effetto di aree bianche durante lo scroll su iPhone usando uno scroll container interno full-screen
+- rimossa la barra esterna del dock: restano solo i pulsanti/glass cluster
+- ottimizzato il foglio "Registra peso" per iPhone 15 con altezza adattiva e spazi più compatti
