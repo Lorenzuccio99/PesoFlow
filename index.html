@@ -480,6 +480,36 @@ nav#bottomDock::before{display:none!important}
 /* keep graph halos centered: glow changes only, no scale/translation */
 .pointHalo{transform:none!important;transform-origin:center!important}
 
+
+
+/* v1.4.1 small iPhone refinements */
+/* date/time are visually centered even with native iOS controls */
+.nativeControl{position:relative;width:100%;overflow:hidden}
+.nativeControl input[type="date"],.nativeControl input[type="time"]{
+  width:100%!important;max-width:100%!important;box-sizing:border-box!important;
+  text-align:center!important;text-align-last:center!important;
+  padding-left:14px!important;padding-right:14px!important;
+}
+.nativeControl input[type="date"]::-webkit-date-and-time-value,
+.nativeControl input[type="time"]::-webkit-date-and-time-value{
+  text-align:center!important;margin:0 auto!important;width:100%!important;min-width:0!important;
+}
+.nativeControl input[type="date"]::-webkit-datetime-edit,
+.nativeControl input[type="time"]::-webkit-datetime-edit{
+  text-align:center!important;display:block!important;width:100%!important;padding:0!important;
+}
+.nativeControl input[type="date"]::-webkit-calendar-picker-indicator,
+.nativeControl input[type="time"]::-webkit-calendar-picker-indicator{
+  position:absolute!important;inset:0!important;width:100%!important;height:100%!important;opacity:0!important;cursor:pointer!important;
+}
+/* Weight: decimal keypad on iPhone and no horizontal overflow */
+#entryWeight{width:100%!important;max-width:100%!important;box-sizing:border-box!important}
+/* dock slightly above the physical bottom curve, not flush to the edge */
+nav#bottomDock{
+  bottom:max(14px,calc(env(safe-area-inset-bottom) - 14px))!important;
+  padding-left:8px!important;padding-right:8px!important;
+}
+
 </style>
 
 <meta name="theme-color" content="#173a55">
@@ -630,7 +660,7 @@ nav#bottomDock::before{display:none!important}
     <div class="row between"><h2>Registra peso</h2><button class="secondary" onclick="closeModal()">Chiudi</button></div>
     <div class="setting"><label>Data</label><div class="nativeControl"><input id="entryDate" type="date"></div></div>
     <div class="setting"><label>Orario</label><div class="nativeControl"><input id="entryTime" type="time" value="07:00"></div></div>
-    <div class="setting"><label>Peso (kg)</label><input id="entryWeight" type="number" step="0.1" min="20" max="400" placeholder="72.0"></div>
+    <div class="setting"><label>Peso (kg)</label><input id="entryWeight" type="text" inputmode="decimal" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="72,0"></div>
     <div class="setting"><label>Quando ti sei pesato?</label><select id="entryTiming"><option value="a digiuno">A digiuno</option><option value="in mattinata">In mattinata</option><option value="nel pomeriggio">Nel pomeriggio</option><option value="dopo allenamento">Dopo allenamento</option><option value="di sera">Di sera</option></select></div>
     <div class="setting"><label>Nota opzionale</label><textarea id="entryNote" rows="3" placeholder="Es. cena più salata, viaggio..."></textarea></div>
     <button class="primary" onclick="saveEntry()">Salva pesata</button>
@@ -1054,6 +1084,17 @@ function closeModal(){
 }
 document.getElementById('entryDate').addEventListener('change',loadForDate);
 document.getElementById('entryTime').addEventListener('change',loadForDate);
+const entryWeightInput=document.getElementById('entryWeight');
+entryWeightInput.addEventListener('input',()=>{
+ let v=entryWeightInput.value.replace(/[^0-9.,]/g,'').replace(/,/g,'.');
+ const parts=v.split('.');
+ if(parts.length>2) v=parts.shift()+'.'+parts.join('');
+ if(v.includes('.')){
+   const [a,b='']=v.split('.');
+   v=a+'.'+b.slice(0,2);
+ }
+ entryWeightInput.value=v.replace('.',',');
+});
 function loadForDate(){
  const d=document.getElementById('entryDate').value;
  const t=document.getElementById('entryTime').value || '07:00';
@@ -1064,7 +1105,7 @@ function loadForDate(){
  document.getElementById('deleteEntryBtn').style.display=e?'block':'none';
 }
 function saveEntry(){
- const date=document.getElementById('entryDate').value, time=document.getElementById('entryTime').value || '07:00', weight=Number(document.getElementById('entryWeight').value), timing=document.getElementById('entryTiming').value || 'a digiuno';
+ const date=document.getElementById('entryDate').value, time=document.getElementById('entryTime').value || '07:00', weight=Number(String(document.getElementById('entryWeight').value).replace(',','.')), timing=document.getElementById('entryTiming').value || 'a digiuno';
  if(!date||!weight||weight<20||weight>400){alert('Inserisci un peso valido.');return}
  const e={date,time,weight,timing,fasting:timing==='a digiuno',workout:timing==='dopo allenamento',note:document.getElementById('entryNote').value};
  entries=entries.filter(x=>!(x.date===date && (x.time||'07:00')===time));

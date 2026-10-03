@@ -28,3 +28,9 @@ Sostituisci `index.html` con la nuova versione e, se modifichi gli asset, cambia
 
 ## v1.4 CLEAN
 Ricostruzione pulita del layout iPhone dalla PWA stabile: nessun body fixed, nessuno scroll container interno. Dock ancorato al viewport, data/ora in wrapper dedicati, sfondo full-viewport e modal compatto.
+
+
+## Aggiornamento v1.4.1
+- tastiera numerica/decimale dedicata per il peso con filtro dei caratteri non numerici
+- Data e Orario centrati nei controlli iOS
+- dock alzato leggermente rispetto al bordo inferiore seguendo la curva dell’iPhone
