@@ -41,9 +41,9 @@ Sostituisci `index.html` con la nuova versione e, se modifichi gli asset, cambia
 - cache PWA aggiornata a v12 per forzare il refresh della nuova UI
 
 
-## Aggiornamento v1.3
-- campi Data e Orario del modal ottimizzati alla larghezza del riquadro
-- dock abbassato e spinto di più verso gli angoli
-- scroll del dock: sparisce durante lo scorrimento e ritorna quando ti fermi
-- sfondo esteso e reso più coerente nella parte bassa per evitare l'effetto banda scura
-- sheet Registra peso ridotto e contenuto entro lo schermo su iPhone 15
+## v1.3.1 STABLE
+- rollback della modifica `body: fixed` che poteva rompere la PWA installata su iOS
+- eliminato il doppio handler JavaScript per il blocco zoom
+- mantenuto scroll nativo della pagina e hide/show del dock
+- campi Data/Orario dimensionati senza disabilitare i controlli nativi iOS
+- sfondo/theme color uniformati per ridurre bande diverse nelle safe-area

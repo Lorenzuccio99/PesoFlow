@@ -3,6 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#102946">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PesoFlow">
 <title>PesoFlow</title>
 <style>
 :root{
@@ -383,41 +387,86 @@ button,input,select,textarea,a{touch-action:manipulation!important}
 
 
 
-/* v1.3 layout fixes for iPhone */
-html,body{height:100%;overflow:hidden;overscroll-behavior:none;background:
-  radial-gradient(circle at 18% 10%, rgba(140,76,255,.18) 0, rgba(140,76,255,0) 24%),
-  radial-gradient(circle at 88% 10%, rgba(73,138,255,.22) 0, rgba(73,138,255,0) 24%),
-  radial-gradient(circle at 70% 92%, rgba(49,170,255,.18) 0, rgba(49,170,255,0) 28%),
-  radial-gradient(circle at 18% 96%, rgba(108,214,255,.14) 0, rgba(108,214,255,0) 25%),
-  linear-gradient(180deg,#081225 0%,#0b1730 48%,#102946 100%) !important}
-body{min-height:100dvh;position:fixed;inset:0;width:100%}
-.shell{max-width:430px;height:100dvh;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding:calc(env(safe-area-inset-top) + 22px) 14px calc(78px + env(safe-area-inset-bottom)) !important;background:transparent}
-.top{padding:8px 2px 20px !important;min-height:108px !important}
-.liveDate{font-size:15px !important}
-.liveTime{font-size:29px !important;line-height:1.05 !important}
+/* v1.3.1 STABLE — iOS PWA conservative layout fixes */
+html{
+  min-height:100%;
+  background:#102946;
+  overscroll-behavior-y:none;
+}
+body{
+  min-height:100dvh !important;
+  overflow-x:hidden !important;
+  background-color:#102946 !important;
+  overscroll-behavior-y:none;
+}
+.shell{
+  min-height:100dvh !important;
+  padding-top:calc(22px + env(safe-area-inset-top)) !important;
+  padding-bottom:calc(86px + env(safe-area-inset-bottom)) !important;
+}
+.top{
+  padding-top:6px !important;
+  min-height:100px !important;
+}
 
-/* dock lower and closer to the corners */
-nav#bottomDock{display:flex !important;justify-content:space-between !important;align-items:flex-end !important;left:50% !important;transform:translateX(-50%) !important;width:min(430px,calc(100% - 8px)) !important;max-width:430px !important;padding:0 4px !important;bottom:calc(env(safe-area-inset-bottom) + 2px) !important;gap:10px !important;background:transparent !important;border:0 !important;box-shadow:none !important;backdrop-filter:none !important;-webkit-backdrop-filter:none !important}
-#bottomDock .dockLeft{padding:6px 8px !important;border-radius:28px !important}
-#bottomDock .dockHome{padding:6px !important;border-radius:28px !important}
-#bottomDock .dockCluster{margin:0 !important}
-#bottomDock.dockHidden{transform:translate(-50%,92px) !important;opacity:0 !important}
+/* Dock: low, split, still disappears while page scrolls */
+nav#bottomDock{
+  width:min(430px,calc(100% - 8px)) !important;
+  max-width:430px !important;
+  padding:0 4px !important;
+  bottom:max(2px,calc(env(safe-area-inset-bottom) - 24px)) !important;
+  gap:10px !important;
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+}
+#bottomDock .dockLeft{padding:6px 8px !important}
+#bottomDock .dockHome{padding:6px !important}
+#bottomDock.dockHidden{transform:translate(-50%,96px) !important;opacity:0 !important}
 
-/* modal sheet sizing and field width */
-.modal{padding-top:env(safe-area-inset-top);align-items:flex-end}
-.sheet{box-sizing:border-box;width:min(430px,calc(100% - 12px)) !important;max-width:430px !important;max-height:76dvh !important;overflow:auto !important;border-radius:30px 30px 0 0 !important;padding:14px 14px calc(14px + env(safe-area-inset-bottom)) !important;margin:0 auto !important}
-.sheet .setting,.sheet form,.sheet .row,.sheet .row.between{width:100%;min-width:0}
-.sheet .setting{overflow:hidden}
-.sheet input,.sheet select,.sheet textarea{display:block;width:100% !important;max-width:100% !important;min-width:0 !important;box-sizing:border-box !important}
-#entryDate,#entryTime{padding-left:12px !important;padding-right:12px !important;text-align:center;-webkit-appearance:none;appearance:none}
-input[type="date"]::-webkit-date-and-time-value,input[type="time"]::-webkit-date-and-time-value{text-align:center}
-input[type="date"]::-webkit-calendar-picker-indicator,input[type="time"]::-webkit-calendar-picker-indicator{opacity:.92}
-.sheet textarea{min-height:84px !important;resize:none}
-.sheet .primary{margin-top:8px}
-.sheet .hint{padding-bottom:4px}
+/* Registration sheet: fit iPhone 15 without touching native date/time controls */
+.modal{
+  align-items:flex-end !important;
+  padding-top:env(safe-area-inset-top) !important;
+}
+.sheet{
+  width:calc(100% - 18px) !important;
+  max-width:410px !important;
+  max-height:78dvh !important;
+  margin:0 auto !important;
+  padding:14px 14px calc(14px + env(safe-area-inset-bottom)) !important;
+  border-radius:28px 28px 0 0 !important;
+  overflow-y:auto !important;
+  overflow-x:hidden !important;
+  -webkit-overflow-scrolling:touch;
+}
+.sheet .setting{width:100% !important;min-width:0 !important;margin:9px 0 !important}
+.sheet input,.sheet select,.sheet textarea{
+  display:block !important;
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  box-sizing:border-box !important;
+  font-size:16px !important;
+}
+#entryDate,#entryTime{
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  padding-left:12px !important;
+  padding-right:12px !important;
+}
+.sheet textarea{min-height:80px !important;resize:none !important}
+.sheet .primary{margin-top:8px !important}
+.sheet .hint{margin-top:7px !important;padding-bottom:2px}
 
-/* avoid bottom dark band feeling */
-.page:last-child,.card:last-child{margin-bottom:0}
+@media (max-height:760px){
+  .sheet{max-height:82dvh !important;padding-top:10px !important}
+  .sheet .setting{margin:7px 0 !important}
+  .sheet textarea{min-height:68px !important}
+}
 
 </style>
 
@@ -1134,8 +1183,7 @@ document.addEventListener('pointerdown', (e) => {
  void btn.offsetWidth;
  btn.classList.add('ripple');
 });
-window.const dockScrollTarget = document.querySelector('.shell') || window;
-dockScrollTarget.addEventListener('scroll', ()=>{ const nav=document.getElementById('bottomDock'); if(!nav) return; nav.classList.add('dockHidden'); clearTimeout(navScrollTimer); navScrollTimer=setTimeout(()=>nav.classList.remove('dockHidden'), 180); }, {passive:true});
+window.addEventListener('scroll', ()=>{ const nav=document.getElementById('bottomDock'); if(!nav) return; nav.classList.add('dockHidden'); clearTimeout(navScrollTimer); navScrollTimer=setTimeout(()=>nav.classList.remove('dockHidden'), 160); }, {passive:true});
 function updateLiveClock(){
  const now = new Date();
  const dateText = now.toLocaleDateString('it-IT',{
@@ -1180,17 +1228,5 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js').catch(() => {});
   });
 }
-
-// Block pinch/double-tap zoom for the installed app UI.
-["gesturestart","gesturechange","gestureend"].forEach(type=>{
-  document.addEventListener(type,e=>e.preventDefault(),{passive:false});
-});
-let lastTouchEnd=0;
-document.addEventListener('touchend',e=>{
-  const now=Date.now();
-  if(now-lastTouchEnd<=300){e.preventDefault();}
-  lastTouchEnd=now;
-},{passive:false});
-
 </script>
 </body></html>
