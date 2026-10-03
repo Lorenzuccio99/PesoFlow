@@ -30,3 +30,12 @@ Sostituisci `index.html` con la nuova versione e, se modifichi gli asset, cambia
 - eliminato l'effetto di aree bianche durante lo scroll su iPhone usando uno scroll container interno full-screen
 - rimossa la barra esterna del dock: restano solo i pulsanti/glass cluster
 - ottimizzato il foglio "Registra peso" per iPhone 15 con altezza adattiva e spazi più compatti
+
+
+## Aggiornamento v1.2
+- sfondo esteso fino alle safe-area inferiori, senza fascia quasi nera
+- dock abbassato verso il bordo inferiore su iPhone
+- header data/orario spostato leggermente più in basso
+- finestra Registra peso limitata al 76% del viewport con scroll interno
+- zoom/pinch e doppio tap zoom disabilitati nell'interfaccia PWA
+- cache PWA aggiornata a v12 per forzare il refresh della nuova UI
