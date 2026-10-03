@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pesoflow-pwa-v131-stable';
+const CACHE_NAME = 'pesoflow-pwa-v14-clean';
 const APP_SHELL = [
   './',
   './index.html',

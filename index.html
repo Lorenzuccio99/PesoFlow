@@ -3,10 +3,6 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#102946">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="PesoFlow">
 <title>PesoFlow</title>
 <style>
 :root{
@@ -304,173 +300,189 @@ body::after{width:300px;height:300px;right:-90px;top:320px;border-radius:61% 39%
 
 
 
-/* v1.1 iPhone polish */
-html{height:100%;background:#081120;overscroll-behavior:none;-webkit-text-size-adjust:100%}
-body{position:fixed;inset:0;min-height:100dvh;width:100%;overflow:hidden;background-color:#081120;overscroll-behavior:none}
-.shell{max-width:430px;margin:0 auto;height:100dvh;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding:calc(10px + env(safe-area-inset-top)) 14px calc(108px + env(safe-area-inset-bottom))}
-.top{padding-top:4px}
-
-/* remove outer dock bar, keep only transparent pill buttons */
-nav#bottomDock{background:transparent!important;border:0!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;padding:0!important;width:min(420px,calc(100% - 24px));bottom:calc(10px + env(safe-area-inset-bottom));gap:16px}
-nav#bottomDock::before{display:none!important}
-#bottomDock .dockCluster{background:rgba(255,255,255,.12)!important;border:1px solid rgba(255,255,255,.16)!important;box-shadow:0 16px 36px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.22)!important;backdrop-filter:blur(28px) saturate(165%);-webkit-backdrop-filter:blur(28px) saturate(165%)}
-#bottomDock .dockCluster::before{display:none!important}
-#bottomDock .dockLeft{padding:6px 7px}
-#bottomDock .dockHome{padding:6px}
-#bottomDock button{background:rgba(255,255,255,.01);border-radius:19px}
-#bottomDock button.active{background:linear-gradient(180deg,rgba(255,255,255,.20),rgba(255,255,255,.09))!important}
-
-/* better modal sizing for iPhone 15 */
-.modal{padding-top:env(safe-area-inset-top);align-items:flex-end}
-.sheet{width:min(430px,100%);max-height:calc(100dvh - env(safe-area-inset-top) - 8px);border-radius:28px 28px 0 0;padding:14px 14px calc(14px + env(safe-area-inset-bottom));overflow:auto;scrollbar-width:none}
-.sheet::-webkit-scrollbar{display:none}
-.sheet h2{margin:0;font-size:18px;line-height:1.15}
-.sheet .row.between{align-items:center;margin-bottom:10px;position:sticky;top:0;z-index:2;padding-bottom:8px;background:linear-gradient(180deg,rgba(16,26,41,.98),rgba(16,26,41,.92),rgba(16,26,41,0))}
-.sheetClose{padding:11px 16px;border-radius:18px;min-width:96px}
-.sheet .setting{margin:10px 0}
-.sheet .setting label{margin-bottom:6px;font-size:12px}
-.sheet textarea,.sheet input,.sheet select{padding:12px 14px;border-radius:18px}
-.sheet textarea{min-height:92px;resize:vertical}
-.sheet .primary{margin-top:10px;padding:13px 16px;border-radius:20px}
-.sheet .hint{margin-top:8px;font-size:11px}
-#deleteEntryBtn{margin-top:8px!important}
-@media (max-height: 860px){
-  .sheet{padding:12px 12px calc(12px + env(safe-area-inset-bottom));max-height:calc(100dvh - env(safe-area-inset-top) - 4px)}
-  .sheet .setting{margin:8px 0}
-  .sheet textarea,.sheet input,.sheet select{padding:11px 13px}
-  .sheet textarea{min-height:78px}
-  .sheet h2{font-size:17px}
-}
-
-
-
-/* v1.2 iPhone 15 / standalone PWA polish */
-html{height:100%;min-height:100%;background:#0b1730!important;overscroll-behavior:none}
-body{position:fixed;inset:0;width:100%;height:100%;min-height:100%;overflow:hidden!important;overscroll-behavior:none!important;touch-action:pan-y;background:
- radial-gradient(circle at 18% 8%,rgba(255,104,168,.25) 0%,rgba(255,104,168,0) 28%),
- radial-gradient(circle at 86% 14%,rgba(120,111,255,.33) 0%,rgba(120,111,255,0) 31%),
- radial-gradient(circle at 78% 84%,rgba(65,211,235,.24) 0%,rgba(65,211,235,0) 34%),
- radial-gradient(circle at 18% 96%,rgba(79,185,222,.18) 0%,rgba(79,185,222,0) 30%),
- linear-gradient(155deg,#0a1024 0%,#0d1833 43%,#10233b 72%,#112b40 100%)!important}
-.shell{height:100%;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;touch-action:pan-y;padding-top:calc(10px + env(safe-area-inset-top));padding-bottom:calc(92px + env(safe-area-inset-bottom));background:transparent}
-.top{padding-top:14px!important;min-height:94px!important}
-
-/* dock lower, no dark empty zone around it */
-nav#bottomDock{bottom:max(4px,calc(env(safe-area-inset-bottom) - 6px))!important;width:min(420px,calc(100% - 20px));}
-#bottomDock .dockCluster{background:rgba(255,255,255,.11)!important;border-color:rgba(255,255,255,.17)!important}
-
-/* compact registration sheet: always fully contained in iPhone viewport */
-.modal{align-items:flex-end!important;padding:0 6px calc(4px + env(safe-area-inset-bottom))!important;background:rgba(4,8,18,.48)!important;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
-.sheet{width:100%!important;max-width:418px!important;max-height:min(76dvh,720px)!important;margin:0 auto!important;border-radius:28px!important;padding:12px 14px calc(12px + env(safe-area-inset-bottom))!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain;scrollbar-width:none;box-shadow:0 24px 70px rgba(0,0,0,.38)!important}
-.sheet::-webkit-scrollbar{display:none}
-.sheet .row.between{position:sticky;top:-1px;z-index:3;margin:0 -2px 8px;padding:4px 2px 10px;background:linear-gradient(180deg,rgba(16,26,41,.99) 0%,rgba(16,26,41,.94) 74%,rgba(16,26,41,0) 100%)}
-.sheet h2{font-size:18px!important;margin:0!important}
-.sheetClose{min-width:auto!important;padding:9px 14px!important;border-radius:16px!important}
-.sheet .setting{margin:8px 0!important}
-.sheet .setting label{font-size:12px!important;margin-bottom:5px!important}
-.sheet input,.sheet select,.sheet textarea{font-size:16px!important;padding:10px 12px!important;border-radius:16px!important}
-.sheet textarea{min-height:68px!important;max-height:100px!important;resize:none!important}
-.sheet .primary{margin-top:8px!important;padding:12px 14px!important}
-.sheet .hint{font-size:10.5px!important;margin-top:7px!important;line-height:1.3!important}
-#deleteEntryBtn{margin-top:7px!important;padding:11px 13px!important}
-
-/* disable browser zoom gestures while preserving vertical app scroll */
-html,body,.shell{touch-action:pan-y!important}
-button,input,select,textarea,a{touch-action:manipulation!important}
-@media (max-height:760px){
-  .sheet{max-height:72dvh!important;padding:10px 12px calc(10px + env(safe-area-inset-bottom))!important}
-  .sheet .setting{margin:6px 0!important}
-  .sheet input,.sheet select,.sheet textarea{padding:9px 11px!important}
-  .sheet textarea{min-height:58px!important;max-height:74px!important}
-  .sheet .primary{padding:11px 13px!important}
-}
-
-
-
-/* v1.3.1 STABLE — iOS PWA conservative layout fixes */
+/* === PesoFlow v1.4 CLEAN: iPhone standalone layout === */
+:root{--pf-bottom:#173a55;--pf-top:#090f22}
 html{
+  margin:0;
   min-height:100%;
-  background:#102946;
-  overscroll-behavior-y:none;
+  background:
+    radial-gradient(circle at 14% 4%,rgba(202,91,173,.20) 0,rgba(202,91,173,0) 25%),
+    radial-gradient(circle at 88% 8%,rgba(85,117,255,.30) 0,rgba(85,117,255,0) 29%),
+    radial-gradient(circle at 82% 86%,rgba(72,202,235,.20) 0,rgba(72,202,235,0) 32%),
+    linear-gradient(158deg,#080f21 0%,#0c1933 45%,#173a55 100%);
+  background-color:var(--pf-bottom);
+  overscroll-behavior-x:none;
+  -webkit-text-size-adjust:100%;
 }
 body{
-  min-height:100dvh !important;
-  overflow-x:hidden !important;
-  background-color:#102946 !important;
-  overscroll-behavior-y:none;
+  margin:0;
+  min-height:100dvh;
+  overflow-x:hidden;
+  background:transparent!important;
+  overscroll-behavior-x:none;
+  touch-action:pan-y;
+}
+#appBackground{
+  position:fixed;
+  z-index:-20;
+  inset:-12vh -12vw;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 14% 4%,rgba(202,91,173,.20) 0,rgba(202,91,173,0) 25%),
+    radial-gradient(circle at 88% 8%,rgba(85,117,255,.30) 0,rgba(85,117,255,0) 29%),
+    radial-gradient(circle at 82% 86%,rgba(72,202,235,.20) 0,rgba(72,202,235,0) 32%),
+    radial-gradient(circle at 16% 94%,rgba(64,173,213,.18) 0,rgba(64,173,213,0) 26%),
+    linear-gradient(158deg,#080f21 0%,#0c1933 45%,#173a55 100%);
+  background-color:var(--pf-bottom);
 }
 .shell{
-  min-height:100dvh !important;
-  padding-top:calc(22px + env(safe-area-inset-top)) !important;
-  padding-bottom:calc(86px + env(safe-area-inset-bottom)) !important;
+  max-width:430px!important;
+  min-height:100dvh!important;
+  height:auto!important;
+  margin:0 auto!important;
+  overflow:visible!important;
+  padding:calc(env(safe-area-inset-top) + 32px) 14px calc(env(safe-area-inset-bottom) + 92px)!important;
+  background:transparent!important;
 }
-.top{
-  padding-top:6px !important;
-  min-height:100px !important;
-}
+.top{min-height:106px!important;padding:8px 2px 20px!important}
+.liveHead{gap:18px!important}
+.liveMeta{padding:0 7px!important}
+.liveDate{font-size:15px!important;line-height:1.2!important}
+.liveTime{font-size:29px!important;line-height:1.05!important;letter-spacing:.1px!important}
 
-/* Dock: low, split, still disappears while page scrolls */
+/* bottom dock: truly fixed to viewport edges, no surrounding bar */
 nav#bottomDock{
-  width:min(430px,calc(100% - 8px)) !important;
-  max-width:430px !important;
-  padding:0 4px !important;
-  bottom:max(2px,calc(env(safe-area-inset-bottom) - 24px)) !important;
-  gap:10px !important;
-  background:transparent !important;
-  border:0 !important;
-  box-shadow:none !important;
-  backdrop-filter:none !important;
-  -webkit-backdrop-filter:none !important;
+  position:fixed!important;
+  left:0!important;
+  right:0!important;
+  bottom:0!important;
+  width:100%!important;
+  max-width:none!important;
+  transform:none!important;
+  display:flex!important;
+  align-items:flex-end!important;
+  justify-content:space-between!important;
+  gap:8px!important;
+  padding:0 4px 2px 4px!important;
+  margin:0!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  z-index:80!important;
+  pointer-events:none!important;
+  transition:transform .24s ease,opacity .24s ease!important;
 }
-#bottomDock .dockLeft{padding:6px 8px !important}
-#bottomDock .dockHome{padding:6px !important}
-#bottomDock.dockHidden{transform:translate(-50%,96px) !important;opacity:0 !important}
+nav#bottomDock::before{display:none!important}
+#bottomDock.dockHidden{transform:translateY(110%)!important;opacity:0!important}
+#bottomDock .dockCluster{
+  pointer-events:auto!important;
+  margin:0!important;
+  background:rgba(255,255,255,.12)!important;
+  border:1px solid rgba(255,255,255,.20)!important;
+  box-shadow:0 12px 34px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.24)!important;
+  backdrop-filter:blur(28px) saturate(170%)!important;
+  -webkit-backdrop-filter:blur(28px) saturate(170%)!important;
+}
+#bottomDock .dockCluster::before{display:none!important}
+#bottomDock .dockLeft{padding:6px 7px!important;border-radius:27px!important;gap:3px!important}
+#bottomDock .dockHome{padding:6px!important;border-radius:27px!important}
+#bottomDock button{width:48px!important;height:48px!important;min-height:48px!important;border-radius:18px!important}
+#bottomDock .navImg,#bottomDock .aiNavImg{width:24px!important;height:24px!important}
 
-/* Registration sheet: fit iPhone 15 without touching native date/time controls */
+/* entry sheet: bounded card with iOS-safe native controls */
 .modal{
-  align-items:flex-end !important;
-  padding-top:env(safe-area-inset-top) !important;
+  position:fixed!important;
+  inset:0!important;
+  z-index:120!important;
+  display:none;
+  align-items:flex-end!important;
+  justify-content:center!important;
+  padding:calc(env(safe-area-inset-top) + 6px) 8px 0!important;
+  background:rgba(2,7,18,.52)!important;
+  overflow:hidden!important;
 }
+.modal.open{display:flex!important}
 .sheet{
-  width:calc(100% - 18px) !important;
-  max-width:410px !important;
-  max-height:78dvh !important;
-  margin:0 auto !important;
-  padding:14px 14px calc(14px + env(safe-area-inset-bottom)) !important;
-  border-radius:28px 28px 0 0 !important;
-  overflow-y:auto !important;
-  overflow-x:hidden !important;
-  -webkit-overflow-scrolling:touch;
+  width:100%!important;
+  max-width:400px!important;
+  max-height:74dvh!important;
+  margin:0 auto!important;
+  padding:14px 14px calc(14px + env(safe-area-inset-bottom))!important;
+  border-radius:28px 28px 0 0!important;
+  background:rgba(14,25,42,.97)!important;
+  border:1px solid rgba(255,255,255,.17)!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  overscroll-behavior:contain!important;
+  -webkit-overflow-scrolling:touch!important;
+  scrollbar-width:none!important;
+  box-sizing:border-box!important;
 }
-.sheet .setting{width:100% !important;min-width:0 !important;margin:9px 0 !important}
-.sheet input,.sheet select,.sheet textarea{
-  display:block !important;
-  width:100% !important;
-  max-width:100% !important;
-  min-width:0 !important;
-  box-sizing:border-box !important;
-  font-size:16px !important;
+.sheet::-webkit-scrollbar{display:none}
+.sheet .row.between{width:100%!important;align-items:center!important;margin:0 0 8px!important;padding:0!important;position:static!important;background:none!important}
+.sheet h2{font-size:18px!important;line-height:1.15!important;margin:0!important}
+.sheetClose{min-width:auto!important;padding:10px 14px!important;border-radius:18px!important}
+.sheet .setting{width:100%!important;min-width:0!important;margin:9px 0!important;overflow:hidden!important}
+.sheet .setting label{font-size:12px!important;margin-bottom:6px!important}
+.nativeControl{
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  overflow:hidden!important;
+  border:1px solid var(--stroke)!important;
+  border-radius:18px!important;
+  background:rgba(255,255,255,.08)!important;
+  box-sizing:border-box!important;
 }
-#entryDate,#entryTime{
-  width:100% !important;
-  max-width:100% !important;
-  min-width:0 !important;
-  padding-left:12px !important;
-  padding-right:12px !important;
+.nativeControl input{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  height:48px!important;
+  margin:0!important;
+  padding:0 12px!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  box-sizing:border-box!important;
+  font-size:16px!important;
+  color:white!important;
+  text-align:center!important;
 }
-.sheet textarea{min-height:80px !important;resize:none !important}
-.sheet .primary{margin-top:8px !important}
-.sheet .hint{margin-top:7px !important;padding-bottom:2px}
-
+.nativeControl input::-webkit-date-and-time-value{text-align:center!important;min-width:0!important}
+.sheet> .setting> input,.sheet> .setting> select,.sheet> .setting> textarea{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  box-sizing:border-box!important;
+  font-size:16px!important;
+  padding:11px 12px!important;
+  border-radius:18px!important;
+}
+.sheet textarea{min-height:76px!important;max-height:86px!important;resize:none!important}
+.sheet .primary{margin-top:8px!important;padding:12px 14px!important;border-radius:19px!important}
+.sheet .hint{font-size:11px!important;margin-top:7px!important;line-height:1.3!important}
+#deleteEntryBtn{margin-top:7px!important}
 @media (max-height:760px){
-  .sheet{max-height:82dvh !important;padding-top:10px !important}
-  .sheet .setting{margin:7px 0 !important}
-  .sheet textarea{min-height:68px !important}
+ .sheet{max-height:80dvh!important;padding:10px 12px calc(10px + env(safe-area-inset-bottom))!important}
+ .sheet .setting{margin:6px 0!important}
+ .nativeControl input{height:44px!important}
+ .sheet> .setting> input,.sheet> .setting> select,.sheet> .setting> textarea{padding:9px 11px!important}
+ .sheet textarea{min-height:58px!important;max-height:68px!important}
+ .sheet .primary{padding:10px 12px!important}
 }
+
+/* keep graph halos centered: glow changes only, no scale/translation */
+.pointHalo{transform:none!important;transform-origin:center!important}
 
 </style>
 
-<meta name="theme-color" content="#0b1730">
+<meta name="theme-color" content="#173a55">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="PesoFlow">
@@ -480,6 +492,7 @@ nav#bottomDock{
 <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
 </head>
 <body>
+<div id="appBackground" aria-hidden="true"></div>
 <div class="shell">
   
 <div class="top">
@@ -614,9 +627,9 @@ nav#bottomDock{
 
 <div id="modal" class="modal" onclick="if(event.target===this)closeModal()">
   <div class="sheet">
-    <div class="row between"><h2>Registra peso</h2><button class="secondary sheetClose" onclick="closeModal()">Chiudi</button></div>
-    <div class="setting"><label>Data</label><input id="entryDate" type="date"></div>
-    <div class="setting"><label>Orario</label><input id="entryTime" type="time" value="07:00"></div>
+    <div class="row between"><h2>Registra peso</h2><button class="secondary" onclick="closeModal()">Chiudi</button></div>
+    <div class="setting"><label>Data</label><div class="nativeControl"><input id="entryDate" type="date"></div></div>
+    <div class="setting"><label>Orario</label><div class="nativeControl"><input id="entryTime" type="time" value="07:00"></div></div>
     <div class="setting"><label>Peso (kg)</label><input id="entryWeight" type="number" step="0.1" min="20" max="400" placeholder="72.0"></div>
     <div class="setting"><label>Quando ti sei pesato?</label><select id="entryTiming"><option value="a digiuno">A digiuno</option><option value="in mattinata">In mattinata</option><option value="nel pomeriggio">Nel pomeriggio</option><option value="dopo allenamento">Dopo allenamento</option><option value="di sera">Di sera</option></select></div>
     <div class="setting"><label>Nota opzionale</label><textarea id="entryNote" rows="3" placeholder="Es. cena più salata, viaggio..."></textarea></div>
@@ -1183,7 +1196,7 @@ document.addEventListener('pointerdown', (e) => {
  void btn.offsetWidth;
  btn.classList.add('ripple');
 });
-window.addEventListener('scroll', ()=>{ const nav=document.getElementById('bottomDock'); if(!nav) return; nav.classList.add('dockHidden'); clearTimeout(navScrollTimer); navScrollTimer=setTimeout(()=>nav.classList.remove('dockHidden'), 160); }, {passive:true});
+window.addEventListener('scroll', ()=>{ const nav=document.getElementById('bottomDock'); if(!nav) return; nav.classList.add('dockHidden'); clearTimeout(navScrollTimer); navScrollTimer=setTimeout(()=>nav.classList.remove('dockHidden'), 190); }, {passive:true});
 function updateLiveClock(){
  const now = new Date();
  const dateText = now.toLocaleDateString('it-IT',{
@@ -1209,15 +1222,15 @@ resetHistoryFilters(true);
 renderHistory();
 const chatInputEl = document.getElementById('chatInput'); if(chatInputEl && !chatInputEl.value.trim()) chatInputEl.value='Come devo leggere il peso di oggi?';
 
-// Block pinch/double-tap zoom for the installed app UI.
+// Installed-app interaction guard: prevent accidental pinch/double-tap zoom without affecting vertical scrolling.
 ["gesturestart","gesturechange","gestureend"].forEach(type=>{
   document.addEventListener(type,e=>e.preventDefault(),{passive:false});
 });
-let lastTouchEnd=0;
+let pfLastTouchEnd=0;
 document.addEventListener('touchend',e=>{
   const now=Date.now();
-  if(now-lastTouchEnd<=300){e.preventDefault();}
-  lastTouchEnd=now;
+  if(now-pfLastTouchEnd<=280) e.preventDefault();
+  pfLastTouchEnd=now;
 },{passive:false});
 
 </script>
