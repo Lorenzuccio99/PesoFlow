@@ -39,3 +39,10 @@ Ricostruzione pulita del layout iPhone dalla PWA stabile: nessun body fixed, nes
 ## v1.4.2
 - Data e Orario centrati otticamente su iOS tramite un testo visuale indipendente dal controllo nativo.
 - Il tap continua ad aprire il picker nativo iOS.
+
+
+## Aggiornamento v1.4.3
+- finestra Registra peso spostata più in alto mantenendo spazio per la Dynamic Island
+- pagina sottostante completamente bloccata mentre la finestra è aperta
+- scroll consentito solo dentro Registra peso quando necessario
+- posizione della pagina ripristinata esattamente alla chiusura del modal
