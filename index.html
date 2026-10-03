@@ -1,0 +1,1050 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>PesoFlow</title>
+<style>
+:root{
+  --bg:#07111f; --bg2:#0e1a2c; --card:rgba(255,255,255,.11); --stroke:rgba(255,255,255,.16);
+  --text:#f7f9fc; --muted:#aab6c8; --accent:#5aa9ff; --accent2:#8b7dff; --good:#68d5a5; --warn:#ffd37a;
+}
+*{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
+background:radial-gradient(circle at 25% 0%,#17345b 0,transparent 35%),radial-gradient(circle at 100% 25%,#2f2456 0,transparent 30%),linear-gradient(160deg,var(--bg),var(--bg2));color:var(--text);min-height:100vh}
+button,input,select,textarea{font:inherit}.shell{max-width:430px;margin:0 auto;min-height:100vh;padding:18px 14px 96px}
+.top{display:flex;align-items:center;justify-content:center;padding:10px 2px 18px;min-height:82px}
+.liveHead{display:flex;align-items:center;gap:11px;min-width:0}.centerHeader{justify-content:center;width:100%}.centerMeta{align-items:center;text-align:center}
+.liveDotWrap{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:rgba(70,255,136,.10);animation:liveGlow 1.4s ease-in-out infinite}
+.liveDot{width:10px;height:10px;border-radius:50%;background:#46ff88;box-shadow:0 0 10px rgba(70,255,136,.9)}
+.liveMeta{display:flex;flex-direction:column;gap:2px}
+.liveDate{font-size:14px;font-weight:650;line-height:1.15;text-transform:capitalize;color:#aab6c8;white-space:nowrap}
+.liveTime{font-size:28px;font-weight:760;line-height:1;letter-spacing:-1.1px;font-variant-numeric:tabular-nums;color:#f7f9fc}
+.liveBadge{display:none}
+@keyframes liveGlow{0%,100%{transform:scale(.92);background:rgba(70,255,136,.08)}50%{transform:scale(1.10);background:rgba(70,255,136,.20)}}
+.add{width:44px;height:44px;border-radius:50%;border:1px solid var(--stroke);background:rgba(255,255,255,.18);color:white;font-size:26px;backdrop-filter:blur(20px);cursor:pointer}
+.card{background:linear-gradient(145deg,rgba(255,255,255,.15),rgba(255,255,255,.07));border:1px solid var(--stroke);border-radius:28px;padding:18px;margin-bottom:14px;box-shadow:0 18px 60px rgba(0,0,0,.20);backdrop-filter:blur(28px)}
+.label{color:var(--muted);font-size:13px}.weight{font-size:58px;font-weight:650;letter-spacing:-2px;margin:6px 0}.weight span{font-size:20px;color:var(--muted);letter-spacing:0}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}.pill{padding:12px;border-radius:18px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.10)}
+.pill b{display:block;margin-top:3px;font-size:18px}.primary{width:100%;border:0;border-radius:20px;padding:14px 16px;color:white;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--accent2));cursor:pointer;box-shadow:0 10px 30px rgba(78,140,255,.25)}
+.row{display:flex;align-items:center;gap:10px}.between{justify-content:space-between}.headline{font-size:18px;font-weight:700;margin:0 0 8px}.status{font-size:22px;font-weight:750;margin:6px 0}.muted{color:var(--muted);line-height:1.45}
+nav{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);width:min(410px,calc(100% - 20px));display:grid;grid-template-columns:repeat(5,1fr);padding:8px;border-radius:25px;background:rgba(10,20,35,.72);border:1px solid var(--stroke);backdrop-filter:blur(30px);z-index:10}
+nav button{border:0;background:transparent;color:var(--muted);padding:10px 4px;border-radius:16px;cursor:pointer;display:grid;place-items:center;min-height:44px}nav button b{display:block;font-size:20px;line-height:1}nav button.active{color:white;background:rgba(255,255,255,.12)}.navImg{width:24px;height:24px;object-fit:contain;filter:invert(1) opacity(.72)}nav button.active .navImg{filter:invert(1) opacity(1)}
+.page{display:none}.page.active{display:block}.chart{width:100%;height:210px;overflow:visible}.gridline{stroke:rgba(255,255,255,.10);stroke-width:1}.line{fill:none;stroke:#77b6ff;stroke-width:3}.point{fill:#dcecff;stroke:#4b9fff;stroke-width:3}.avg{stroke:rgba(255,255,255,.45);stroke-dasharray:5 5}
+.list .item{padding:13px 0;border-bottom:1px solid rgba(255,255,255,.10)}.list .item:last-child{border-bottom:0}.item strong{font-size:17px}.item small{color:var(--muted)}
+textarea,input,select{width:100%;color:white;background:rgba(255,255,255,.08);border:1px solid var(--stroke);border-radius:16px;padding:12px;outline:none}option{color:#111}
+.setting{margin:14px 0}.setting label{display:block;margin-bottom:7px;color:var(--muted);font-size:13px}
+.chat{display:flex;flex-direction:column;gap:10px;min-height:320px}.bubble{padding:13px 14px;border-radius:20px;max-width:88%;line-height:1.4}.bot{align-self:flex-start;background:rgba(255,255,255,.11);border:1px solid var(--stroke)}.me{align-self:flex-end;background:linear-gradient(135deg,rgba(90,169,255,.65),rgba(139,125,255,.58))}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:50;align-items:flex-end;justify-content:center}.modal.open{display:flex}.sheet{width:min(430px,100%);background:#101a29;border-radius:30px 30px 0 0;border:1px solid var(--stroke);padding:18px 18px calc(20px + env(safe-area-inset-bottom));max-height:90vh;overflow:auto}
+.sheet h2{margin:4px 0 16px}.sheet .setting{margin:12px 0}.toggleRow{display:flex;align-items:center;justify-content:space-between}.toggleRow input{width:auto}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}.secondary{border:1px solid var(--stroke);border-radius:18px;padding:13px;color:white;background:rgba(255,255,255,.08);cursor:pointer}
+.hint{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.4}.badge{display:inline-block;padding:5px 9px;border-radius:999px;background:rgba(255,255,255,.09);color:var(--muted);font-size:12px}
+.empty{padding:25px 0;text-align:center;color:var(--muted)}
+
+.heroCard .label{text-align:left}
+.heroDate{font-size:12px;color:var(--muted);text-align:center;margin-top:2px}
+.centeredWeight{text-align:center}
+.commentOnlyCard .muted{color:var(--text)}
+
+
+.compactHero{padding:14px 16px 16px}
+.compactMetrics{gap:8px;margin:10px 0 12px}
+.compactPill{padding:10px 12px;border-radius:16px}
+.compactPill b{font-size:16px}
+.compactPrimary{padding:12px 14px;border-radius:18px}
+.heroDateBadge{
+  display:inline-flex; align-items:center; justify-content:center; margin:2px auto 2px;
+  min-width:72px; padding:6px 12px; border-radius:999px; font-size:13px; font-weight:700;
+  color:#eef3ff; border:1px solid rgba(143,125,255,.28);
+  background:rgba(139,125,255,.14); box-shadow:0 0 0 0 rgba(139,125,255,.40);
+  animation:recentGlow 1.6s ease-in-out infinite;
+}
+@keyframes recentGlow{
+  0%,100%{box-shadow:0 0 0 0 rgba(139,125,255,.10); transform:scale(.98)}
+  50%{box-shadow:0 0 0 9px rgba(139,125,255,.08); transform:scale(1.02)}
+}
+.chartInfo{
+  margin-top:10px; font-size:13px; color:#f7f9fc; min-height:19px; text-align:center;
+}
+.centerMetric{
+  margin-top:14px; display:flex; flex-direction:column; align-items:center; justify-content:center;
+}
+.centerMetric b{
+  margin-top:4px; font-size:24px; color:#fff;
+}
+.commentOnlyCard{padding-top:14px;padding-bottom:14px}
+.commentOnlyCard .muted{color:#f7f9fc}
+.centeredWeight{margin:6px 0 2px}
+
+
+.heroDateBadge{display:flex;justify-content:center}
+.compactHero .row.between{justify-content:flex-start}
+#weekAvgCard.status-good b,#rolling4weeksCard.status-good b{color:#6ef0a6}
+#weekAvgCard.status-bad b,#rolling4weeksCard.status-bad b{color:#ff8a8a}
+#weekAvgCard.status-good,#rolling4weeksCard.status-good{box-shadow:inset 0 0 0 1px rgba(110,240,166,.22);background:rgba(110,240,166,.08)}
+#weekAvgCard.status-bad,#rolling4weeksCard.status-bad{box-shadow:inset 0 0 0 1px rgba(255,138,138,.22);background:rgba(255,138,138,.08)}
+.tooltipRect{fill:rgba(12,20,32,.94);stroke:rgba(255,255,255,.16);stroke-width:1}
+.tooltipText{fill:#fff;font-size:12px;font-weight:700}
+.historyAccordion{display:flex;flex-direction:column;gap:10px}
+.historyItem{border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.05);border-radius:18px;overflow:hidden}
+.historySummary{display:flex;align-items:center;justify-content:space-between;padding:14px 14px;cursor:pointer}
+.historyMain{display:flex;flex-direction:column;gap:3px}
+.historyMain strong{font-size:15px}
+.historyMain small{color:var(--muted)}
+.historyRight{display:flex;align-items:center;gap:10px}
+.historyWeight{font-size:18px;font-weight:800}
+.chev{transition:transform .2s ease;color:var(--muted)}
+.historyItem.open .chev{transform:rotate(180deg)}
+.historyDetails{display:none;padding:0 14px 14px}
+.historyItem.open .historyDetails{display:block}
+.historyMeta{font-size:13px;color:var(--muted);margin-bottom:10px;line-height:1.5}
+.historyActions{display:flex;gap:8px}
+.filtersRow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.filterBox label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+.coachQuickStats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:2px 0 14px}
+.quickChip{padding:10px 12px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10)}
+.quickChip b{display:block;font-size:15px;margin-top:2px}
+nav{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);width:min(410px,calc(100% - 20px));display:grid;grid-template-columns:repeat(4,1fr);padding:8px;border-radius:26px;background:rgba(18,26,40,.34);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(28px) saturate(160%);-webkit-backdrop-filter:blur(28px) saturate(160%);z-index:10;box-shadow:0 15px 50px rgba(0,0,0,.22)}
+nav button{position:relative;overflow:hidden;border:0;background:transparent;color:var(--muted);padding:10px 4px;border-radius:18px;cursor:pointer;display:grid;place-items:center;min-height:46px}
+nav button::after{content:'';position:absolute;inset:auto auto 50% 50%;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.28);transform:translate(-50%,-50%) scale(0);opacity:0;pointer-events:none}
+nav button.ripple::after{animation:dropRipple .55s ease-out}
+@keyframes dropRipple{0%{transform:translate(-50%,-50%) scale(.3);opacity:.65}100%{transform:translate(-50%,-50%) scale(9);opacity:0}}
+
+
+.liveHead{justify-content:center}
+.liveMeta{min-width:185px}
+.liveDate{font-size:15px;order:1}
+.liveTime{font-size:24px;order:2;opacity:.98}
+.heroDateBadge{margin:2px auto 6px}
+.centerMetric{margin-top:16px;padding:14px 16px;border-radius:24px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);overflow:hidden}
+.centerMetric .label{display:block;text-align:center;font-size:14px;line-height:1.15;white-space:normal}
+.centerMetric b{margin-top:6px;font-size:20px;line-height:1.05;word-break:keep-all;white-space:nowrap;max-width:100%;display:block;overflow:hidden;text-overflow:ellipsis}
+.navImgHistory{width:34px;height:26px;object-fit:contain}
+.historyTools{display:flex;justify-content:flex-end;margin:0 0 12px}
+.smallAction{padding:9px 12px;border-radius:14px;font-size:13px}
+.historySummary{gap:10px}
+.historyMain{min-width:0;flex:1}
+.historyRight{display:flex;align-items:center;gap:8px}
+.historyEditBtn,.historyChevronBtn{width:34px;height:34px;border-radius:12px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.06);color:#fff;display:grid;place-items:center;cursor:pointer;flex:0 0 auto;transition:transform .2s ease}
+.historyChevronBtn{font-size:15px}
+.historyEditBtn{font-size:14px}
+.historyWeight{font-size:18px;font-weight:800;min-width:66px;text-align:right}
+.historyItem.open .historyChevronBtn{transform:rotate(180deg)}
+.historyHiddenState{padding:16px 14px;border-radius:18px;border:1px dashed rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:var(--muted);text-align:center}
+
+
+html,body{overflow-x:hidden;overscroll-behavior-x:none;touch-action:pan-y}
+.shell,.page,.card{overflow-x:hidden}
+.chart{touch-action:pan-y}
+.metricValue{display:inline-flex;align-items:baseline;justify-content:center;gap:4px;white-space:nowrap;max-width:100%}
+.metricNumber{font-size:1em;line-height:1}
+.metricUnit{font-size:.66em;line-height:1}
+.centerMetric{margin-top:16px;padding:14px 14px;border-radius:26px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);overflow:hidden}
+.centerMetric .label{display:block;text-align:center;font-size:14px;line-height:1.15;white-space:normal}
+.centerMetric b{margin-top:6px;font-size:18px;line-height:1.02;color:#fff;display:block;text-align:center}
+.liveMeta{min-width:185px}
+.historyToolsFull{margin:0 0 12px}
+.fullAction{width:100%;padding:12px 14px;border-radius:18px;font-size:15px}
+.historyAccordion{gap:12px}
+.historyItem{padding:0;border-radius:20px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.11)}
+.historySummary{cursor:default;padding:14px 14px;gap:12px}
+.historyMain{min-width:0;flex:1}
+.historyMain strong{display:block;font-size:15px;line-height:1.15}
+.historyMain small{display:block;margin-top:6px;color:var(--muted)}
+.historyNote{margin-top:8px;font-size:13px;line-height:1.35;color:#eef3ff;opacity:.95}
+.historyRight{display:flex;align-items:center;gap:10px}
+.historyWeight{font-size:17px;font-weight:800;min-width:74px;text-align:right}
+.historyEditBtn{width:40px;height:40px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);color:#fff;display:grid;place-items:center;cursor:pointer;font-size:15px}
+nav#bottomNav{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);width:min(420px,calc(100% - 18px));display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:28px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(30px) saturate(170%);-webkit-backdrop-filter:blur(30px) saturate(170%);box-shadow:0 16px 40px rgba(0,0,0,.18);z-index:20;transition:transform .25s ease, opacity .25s ease}
+#bottomNav.navHidden{transform:translate(-50%,90px);opacity:0}
+#bottomNav .navSpacer{flex:1}
+#bottomNav button{position:relative;overflow:hidden;width:48px;height:48px;min-height:48px;padding:0;border-radius:18px;border:0;background:transparent;display:grid;place-items:center}
+#bottomNav button.active{background:rgba(255,255,255,.16)}
+#bottomNav .navImg{width:24px;height:24px;object-fit:contain;filter:none;opacity:1}
+#bottomNav button::after{content:'';position:absolute;left:50%;top:50%;width:8px;height:8px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.9) 0%, rgba(255,255,255,.5) 35%, rgba(255,255,255,0) 70%);transform:translate(-50%,-50%) scale(0);opacity:0;pointer-events:none}
+#bottomNav button.ripple::after{animation:waterBubble .65s ease-out}
+@keyframes waterBubble{0%{transform:translate(-50%,-50%) scale(.2);opacity:.85}40%{transform:translate(-50%,-50%) scale(4.6);opacity:.38}100%{transform:translate(-50%,-50%) scale(8.2);opacity:0}}
+.tooltipRect.goodStroke{stroke:rgba(110,240,166,.65)}
+.tooltipRect.badStroke{stroke:rgba(255,138,138,.65)}
+.tooltipText.goodText{fill:#71f0aa}
+.tooltipText.badText{fill:#ff8a8a}
+.point.goodPoint{fill:#dffbec;stroke:#57d68d}
+.point.badPoint{fill:#ffe3e3;stroke:#ff7878}
+.point.neutralPoint{fill:#dcecff;stroke:#4b9fff}
+
+
+.card{position:relative;background:linear-gradient(180deg,rgba(77,102,138,.28),rgba(39,55,82,.20));border:1px solid rgba(255,255,255,.11);box-shadow:0 18px 45px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.06);backdrop-filter:blur(16px) saturate(130%);-webkit-backdrop-filter:blur(16px) saturate(130%)}
+.card::before{content:'';position:absolute;inset:0 0 auto 0;height:58%;border-radius:inherit;background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,0));pointer-events:none}
+.heroCard,.graphCard,.coachCard,.commentOnlyCard{overflow:hidden}
+.softBadge{padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.10)}
+.chartShell{position:relative;margin-top:8px;border-radius:24px;padding:8px;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.07);overflow:hidden}
+.chartShell::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 15%,rgba(116,184,255,.10),transparent 34%),radial-gradient(circle at 82% 18%,rgba(151,128,255,.10),transparent 28%);pointer-events:none}
+.chart{height:220px}
+.chartInfo{margin-top:8px;color:rgba(226,236,250,.72);font-size:12px}
+.lineShadow{fill:none;stroke:rgba(0,0,0,.18);stroke-width:8;stroke-linecap:round;stroke-linejoin:round}
+.line{fill:none;stroke:url(#lineGrad);stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round}
+.avg{stroke:rgba(255,255,255,.35);stroke-dasharray:5 5}
+.gridline{stroke:rgba(255,255,255,.08)}
+.pointHalo{opacity:.78}
+.pointHalo.haloGood{fill:rgba(87,214,141,.18);filter:drop-shadow(0 0 4px rgba(87,214,141,.45)) drop-shadow(0 0 9px rgba(87,214,141,.28));animation:haloGlowGood 1.9s ease-in-out infinite}
+.pointHalo.haloBad{fill:rgba(255,120,120,.18);filter:drop-shadow(0 0 4px rgba(255,120,120,.44)) drop-shadow(0 0 9px rgba(255,120,120,.26));animation:haloGlowBad 1.9s ease-in-out infinite}
+.pointHalo.haloNeutral{fill:rgba(75,159,255,.18);filter:drop-shadow(0 0 4px rgba(75,159,255,.44)) drop-shadow(0 0 9px rgba(75,159,255,.25));animation:haloGlowNeutral 1.9s ease-in-out infinite}
+@keyframes haloGlowGood{0%,100%{opacity:.36;filter:drop-shadow(0 0 3px rgba(87,214,141,.30)) drop-shadow(0 0 7px rgba(87,214,141,.18))}50%{opacity:.92;filter:drop-shadow(0 0 6px rgba(87,214,141,.62)) drop-shadow(0 0 14px rgba(87,214,141,.36))}}
+@keyframes haloGlowBad{0%,100%{opacity:.36;filter:drop-shadow(0 0 3px rgba(255,120,120,.30)) drop-shadow(0 0 7px rgba(255,120,120,.18))}50%{opacity:.92;filter:drop-shadow(0 0 6px rgba(255,120,120,.60)) drop-shadow(0 0 14px rgba(255,120,120,.34))}}
+@keyframes haloGlowNeutral{0%,100%{opacity:.36;filter:drop-shadow(0 0 3px rgba(75,159,255,.30)) drop-shadow(0 0 7px rgba(75,159,255,.18))}50%{opacity:.92;filter:drop-shadow(0 0 6px rgba(75,159,255,.60)) drop-shadow(0 0 14px rgba(75,159,255,.34))}}
+.coachCard .headline{display:flex;align-items:center;gap:8px}
+.aiBadge{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.12)}
+.coachHero{padding:14px 14px 16px;border-radius:22px;background:linear-gradient(135deg,rgba(124,188,255,.16),rgba(153,129,255,.12));border:1px solid rgba(255,255,255,.10);margin:4px 0 12px}
+.coachHeroTitle{font-weight:700;font-size:15px;margin-bottom:6px}
+.coachHeroText{color:rgba(232,240,253,.85);font-size:13px;line-height:1.45}
+.coachPromptRow{display:flex;gap:8px;overflow:auto;padding:2px 0 10px;-ms-overflow-style:none;scrollbar-width:none}
+.coachPromptRow::-webkit-scrollbar{display:none}
+.promptChip{white-space:nowrap;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#fff;padding:9px 12px;border-radius:999px;cursor:pointer}
+.coachChat{min-height:270px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:24px;padding:12px}
+.bubble{box-shadow:0 8px 22px rgba(0,0,0,.10)}
+.bot{background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.07))}
+.me{background:linear-gradient(135deg,rgba(100,183,255,.65),rgba(145,130,255,.62))}
+.quickChip{padding:11px 12px;border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.10)}
+.quickChip .label{display:block}
+.quickChip b{font-size:16px}
+.centerMetric{background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.10)}
+#rolling4weeksCard.status-good b{color:#7af1ac}
+#rolling4weeksCard.status-bad b{color:#ff8d8d}
+
+
+body{position:relative;overflow-x:hidden;background:
+ radial-gradient(circle at 12% 2%, rgba(255,110,168,.28) 0%, rgba(255,110,168,0) 26%),
+ radial-gradient(circle at 88% 8%, rgba(124,112,255,.34) 0%, rgba(124,112,255,0) 28%),
+ radial-gradient(circle at 74% 64%, rgba(76,231,255,.20) 0%, rgba(76,231,255,0) 24%),
+ radial-gradient(circle at 24% 78%, rgba(129,255,216,.14) 0%, rgba(129,255,216,0) 20%),
+ linear-gradient(150deg,#060c1c 0%,#0b1730 42%,#081120 100%);} 
+body::before, body::after{content:'';position:fixed;pointer-events:none;z-index:0;opacity:.88;filter:blur(10px);animation:bgFloat 20s ease-in-out infinite}
+body::before{width:360px;height:360px;left:-110px;top:120px;border-radius:48% 52% 66% 34% / 38% 45% 55% 62%;background:conic-gradient(from 180deg, rgba(91,164,255,.34), rgba(63,228,255,.10), rgba(149,101,255,.28), rgba(91,164,255,.34))}
+body::after{width:300px;height:300px;right:-90px;top:320px;border-radius:61% 39% 40% 60% / 53% 43% 57% 47%;background:conic-gradient(from 20deg, rgba(255,125,171,.24), rgba(114,115,255,.15), rgba(55,215,255,.22), rgba(255,125,171,.24));animation-delay:-9s}
+@keyframes bgFloat{0%,100%{transform:translate3d(0,0,0) rotate(0deg)}50%{transform:translate3d(0,-14px,0) rotate(8deg)}}
+.shell{position:relative;z-index:1}
+.top{padding-top:14px}
+.liveHead{gap:16px}
+.liveMeta{padding:0 5px;gap:4px}
+.liveDotWrap{width:26px;height:26px;box-shadow:0 0 0 1px rgba(255,255,255,.05),0 6px 18px rgba(68,255,148,.16)}
+.liveTime{letter-spacing:-.4px;text-shadow:0 4px 14px rgba(0,0,0,.14)}
+.liveDate{letter-spacing:.2px}
+#bottomNav{background:rgba(255,255,255,.13)!important;border:1px solid rgba(255,255,255,.18)!important;box-shadow:0 18px 45px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.25)!important}
+#bottomNav::before{content:'';position:absolute;inset:1px;border-radius:27px;background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.03));pointer-events:none}
+#bottomNav button{backdrop-filter:blur(8px)}
+#bottomNav button.active{background:linear-gradient(180deg,rgba(255,255,255,.20),rgba(255,255,255,.10))!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.2)}
+.card{background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.08))!important;border:1px solid rgba(255,255,255,.14)!important;box-shadow:0 18px 46px rgba(3,10,25,.22), inset 0 1px 0 rgba(255,255,255,.08)!important;transform:translateZ(0)}
+.card::after{content:'';position:absolute;inset:-30% auto auto -35%;width:70%;height:90%;background:linear-gradient(110deg,rgba(255,255,255,.10),rgba(255,255,255,0));transform:rotate(10deg);pointer-events:none;opacity:.6}
+.heroCard{background:linear-gradient(145deg,rgba(125,170,255,.22),rgba(131,106,255,.13) 55%,rgba(255,255,255,.08))!important}
+.graphCard{background:linear-gradient(145deg,rgba(95,165,255,.12),rgba(168,117,255,.10),rgba(255,255,255,.08))!important}
+.commentOnlyCard{background:linear-gradient(145deg,rgba(78,228,203,.10),rgba(255,255,255,.08))!important}
+.chartShell{background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.025))!important;border:1px solid rgba(255,255,255,.10)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+.chartShell::after{content:'';position:absolute;inset:0;background:linear-gradient(120deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.08) 42%,rgba(255,255,255,0) 67%);transform:translateX(-130%);animation:sheen 6.5s ease-in-out infinite;pointer-events:none}
+@keyframes sheen{0%,70%,100%{transform:translateX(-130%)}25%{transform:translateX(130%)}}
+.line{stroke-width:3.5!important;filter:drop-shadow(0 5px 10px rgba(67,152,255,.18))}
+.lineShadow{stroke:rgba(3,10,25,.22)!important;stroke-width:10!important}
+.point{stroke-width:3.2!important}
+.pointHalo{animation:pulseHalo 2.6s ease-in-out infinite}
+@keyframes pulseHalo{0%,100%{transform:scale(.96);opacity:.55}50%{transform:scale(1.12);opacity:.92}}
+#weekChartInfo,#historyChartInfo{padding-left:4px}
+.coachCard{background:linear-gradient(145deg,rgba(88,160,255,.16),rgba(170,105,255,.12),rgba(255,255,255,.09))!important}
+.coachHero{background:linear-gradient(135deg,rgba(104,193,255,.22),rgba(145,113,255,.18))!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+.aiBadge{background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.07))!important}
+.promptChip{background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.05))!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+.quickChip{background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.05))!important}
+.coachChat{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.03))!important}
+.bubble.bot{border:1px solid rgba(255,255,255,.08)}
+.bubble.me{border:1px solid rgba(255,255,255,.11)}
+.primary{background:linear-gradient(90deg,#5fb3ff,#8a79ff)!important;box-shadow:0 12px 28px rgba(71,140,255,.24)}
+.secondary{background:rgba(255,255,255,.07)}
+
+
+/* v0.9.1: fixed graph markers + split liquid dock */
+.pointHalo{animation:haloOpacity 2.4s ease-in-out infinite!important;transform:none!important;transform-origin:center!important;transform-box:fill-box!important}
+.point{transform:none!important;transform-origin:center!important;transform-box:fill-box!important}
+@keyframes haloOpacity{0%,100%{opacity:.42}50%{opacity:.85}}
+
+#bottomDock{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);width:min(420px,calc(100% - 18px));display:flex;align-items:center;justify-content:space-between;gap:14px;z-index:30;transition:transform .25s ease,opacity .25s ease;pointer-events:none}
+#bottomDock.dockHidden{transform:translate(-50%,90px);opacity:0}
+.dockCluster{pointer-events:auto;display:flex;align-items:center;padding:7px;border-radius:26px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.19);backdrop-filter:blur(30px) saturate(175%);-webkit-backdrop-filter:blur(30px) saturate(175%);box-shadow:0 16px 42px rgba(0,0,0,.19),inset 0 1px 0 rgba(255,255,255,.24);position:relative;overflow:hidden}
+.dockCluster::before{content:'';position:absolute;inset:1px;border-radius:25px;background:linear-gradient(180deg,rgba(255,255,255,.17),rgba(255,255,255,.025));pointer-events:none}
+.dockLeft{gap:4px}
+.dockHome{padding:7px}
+#bottomDock button{position:relative;z-index:1;overflow:hidden;width:48px;height:48px;min-height:48px;padding:0;border-radius:18px;border:0;background:transparent;display:grid;place-items:center;cursor:pointer}
+#bottomDock button.active{background:linear-gradient(180deg,rgba(255,255,255,.23),rgba(255,255,255,.10));box-shadow:inset 0 1px 0 rgba(255,255,255,.24),0 5px 14px rgba(0,0,0,.06)}
+#bottomDock .navImg{width:24px;height:24px;object-fit:contain;filter:none!important;opacity:1!important}
+#bottomDock .aiNavImg{width:24px;height:24px;object-fit:contain}
+#bottomDock button::after{content:'';position:absolute;left:50%;top:50%;width:8px;height:8px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.95) 0%,rgba(255,255,255,.52) 34%,rgba(255,255,255,0) 70%);transform:translate(-50%,-50%) scale(0);opacity:0;pointer-events:none}
+#bottomDock button.ripple::after{animation:waterBubbleSplit .65s ease-out}
+@keyframes waterBubbleSplit{0%{transform:translate(-50%,-50%) scale(.2);opacity:.9}42%{transform:translate(-50%,-50%) scale(4.5);opacity:.40}100%{transform:translate(-50%,-50%) scale(8);opacity:0}}
+
+.liveMeta{padding:0 8px!important}
+.liveHead{gap:18px!important}
+.liveTime{letter-spacing:.15px!important;font-variant-numeric:tabular-nums}
+
+.card{animation:cardReveal .38s cubic-bezier(.2,.75,.25,1) both}
+@keyframes cardReveal{from{opacity:.65;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.promptChip:active,.primary:active,.secondary:active{transform:scale(.985)}
+
+
+.areaFill{fill:url(#areaGrad);opacity:.86}
+.tooltipRect{filter:drop-shadow(0 10px 20px rgba(0,0,0,.24));animation:tooltipIn .18s ease-out both}
+.tooltipText{animation:tooltipIn .18s ease-out both}
+@keyframes tooltipIn{from{opacity:0}to{opacity:1}}
+.graphCard{border-color:rgba(255,255,255,.16)!important}
+.chartShell{box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 10px 30px rgba(0,0,0,.07)!important}
+.card{transition:box-shadow .28s ease,border-color .28s ease,background .28s ease}
+.card:focus-within{border-color:rgba(150,193,255,.26)!important;box-shadow:0 20px 52px rgba(2,8,24,.23),inset 0 1px 0 rgba(255,255,255,.11)!important}
+.dockCluster{transition:background .25s ease,border-color .25s ease,box-shadow .25s ease}
+.dockCluster:has(button.active){background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.22);box-shadow:0 18px 48px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.28)}
+.coachConfidence{margin-top:10px;padding:10px 12px;border-radius:16px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08);font-size:12px;color:rgba(235,242,255,.78)}
+
+</style>
+
+<meta name="theme-color" content="#0b1730">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PesoFlow">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icons/apple-touch-icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+</head>
+<body>
+<div class="shell">
+  
+<div class="top">
+  <div class="liveHead centerHeader">
+    <span class="liveDotWrap" aria-hidden="true"><span class="liveDot"></span></span>
+    <div class="liveMeta centerMeta">
+      <div id="liveDate" class="liveDate">Caricamento data…</div>
+      <div id="liveTime" class="liveTime">--:--:--</div>
+    </div>
+    <span class="liveDotWrap" aria-hidden="true"><span class="liveDot"></span></span>
+  </div>
+</div>
+
+<section id="home" class="page active">
+    <div class="card heroCard compactHero">
+      <div class="row between"><div class="label">Peso più recente</div></div>
+      <div id="latestDate" class="heroDate heroDateBadge">—</div>
+      <div class="weight centeredWeight" id="latestWeight">— <span>kg</span></div>
+      <div class="metrics compactMetrics">
+        <div class="pill compactPill" id="weekAvgCard"><span class="label">Media settimana</span><b id="weekAvg">—</b></div>
+        <div class="pill compactPill"><span class="label">Giorni</span><b id="coverage">0/7</b></div>
+      </div>
+      <button class="primary compactPrimary" onclick="openModal()">+ Registra peso</button>
+    </div>
+
+    <div class="card graphCard">
+      <div class="row between"><h3 class="headline">Questa settimana</h3><span class="label softBadge">Lun → Dom</span></div>
+      <div class="chartShell">
+        <svg id="weekChart" class="chart" viewBox="0 0 360 230"></svg>
+      </div>
+      <div id="weekChartInfo" class="chartInfo">Tocca un punto per vedere il peso registrato.</div>
+    </div>
+
+    <div class="card commentOnlyCard">
+      <div class="muted" id="trendDetail">Dopo alcune pesate separerò le oscillazioni giornaliere dal trend.</div>
+    </div>
+
+    <div class="card graphCard">
+      <div class="row between"><h3 class="headline">Medie settimanali</h3><span class="label softBadge">Ultime settimane</span></div>
+      <div class="chartShell">
+        <svg id="historyChart" class="chart" viewBox="0 0 360 230"></svg>
+      </div>
+      <div id="historyChartInfo" class="chartInfo">Tocca un punto per vedere media e intervallo della settimana.</div>
+      <div class="centerMetric" id="rolling4weeksCard">
+        <span class="label">Media 4 settimane</span>
+        <b id="rolling4weeks">—</b>
+      </div>
+    </div>
+  </section>
+
+
+
+  
+<section id="history" class="page">
+  <div class="card">
+    <div class="row between historyHeaderRow"><h3 class="headline">Pesi Registrati</h3><span class="badge">Archivio</span></div>
+    <div class="filtersRow">
+      <div class="filterBox">
+        <label>Settimana</label>
+        <select id="historyWeekFilter" onchange="onHistoryWeekChange()"><option value="">Tutte</option></select>
+      </div>
+      <div class="filterBox">
+        <label>Mese</label>
+        <select id="historyMonthFilter" onchange="onHistoryMonthChange()"><option value="">Tutti</option></select>
+      </div>
+    </div>
+    <div class="historyToolsFull">
+      <button id="toggleHistoryVisibilityBtn" class="secondary fullAction" onclick="toggleHistoryVisibility()">Nascondi pesi</button>
+    </div>
+    <div id="historyList" class="historyAccordion"></div>
+  </div>
+</section>
+
+
+  
+<section id="coach" class="page">
+  <div class="card coachCard">
+    <div class="row between"><h3 class="headline">Coach locale</h3><span class="badge aiBadge">AI offline</span></div>
+    <div class="coachHero">
+      <div class="coachHeroTitle">Analisi intelligente del peso</div>
+      <div class="coachHeroText">Leggo trend, oscillazioni, weekend, viaggi, ritenzione, target settimanali e target mensili. Più contesto mi scrivi, più il coach diventa utile.</div>
+      <div class="coachConfidence" id="coachConfidence">Affidabilità analisi: in attesa di dati.</div>
+    </div>
+    <div class="coachQuickStats" id="coachQuickStats"></div>
+    <div class="coachPromptRow">
+      <button class="promptChip" onclick="useCoachPrompt('Questo weekend ho mangiato fuori, è normale pesare di più?')">Weekend</button>
+      <button class="promptChip" onclick="useCoachPrompt('Sono stato in viaggio, come devo leggere il peso di oggi?')">Viaggio</button>
+      <button class="promptChip" onclick="useCoachPrompt('Sto davvero seguendo il target settimanale?')">Target</button>
+      <button class="promptChip" onclick="useCoachPrompt('Ho mangiato più salato del solito, quanto può incidere?')">Ritenzione</button>
+    </div>
+    <div class="chat coachChat" id="chat">
+      <div class="bubble bot">Sono il tuo coach locale. Posso aiutarti a capire se una salita è reale o temporanea, se il weekend sposta davvero la media, se il target è coerente e come leggere i giorni mancanti. Scrivimi anche il contesto: cene fuori, viaggi, allenamenti, poco sonno o ritenzione.</div>
+    </div>
+    <div class="setting"><input id="chatInput" value="Come devo leggere il peso di oggi?" placeholder="Es. Ho viaggiato, ho mangiato più salato e oggi peso di più: come devo leggerlo?"></div>
+    <button class="primary" onclick="askCoach()">Analizza</button>
+  </div>
+</section>
+
+
+  <section id="settings" class="page">
+    <div class="card">
+      <h3 class="headline">Obiettivo</h3>
+      <div class="setting"><label>Modalità</label><select id="goalMode" onchange="saveSettings();renderAll()"><option>Osserva</option><option>Mantieni</option><option>Dimagrisci</option><option>Aumenta</option></select></div>
+      <div class="setting"><label>Peso target settimanale (kg)</label><input id="targetWeight" inputmode="decimal" placeholder="Es. 70,0" onchange="saveSettings();renderAll()"></div>
+      <div class="setting"><label>Quanto vuoi perdere a settimana? (kg)</label><input id="targetDelta" inputmode="decimal" placeholder="Es. 0,25" onchange="saveSettings();renderAll()"></div>
+      <div class="setting"><label>Target mensile (kg)</label><input id="targetMonthly" inputmode="decimal" placeholder="Es. 72,0" onchange="saveSettings();renderAll()"></div>
+      <div class="hint">Il coach valuta la coerenza con l'obiettivo solo quando lo imposti esplicitamente.</div>
+    </div>
+    <div class="card">
+      <h3 class="headline">Backup</h3>
+      <div class="actions"><button class="secondary" onclick="exportBackup()">Esporta JSON</button><button class="secondary" onclick="document.getElementById('importFile').click()">Importa JSON</button></div>
+      <input id="importFile" type="file" accept=".json,application/json" style="display:none" onchange="importBackup(event)">
+      <div class="hint">Questa preview salva i dati nel browser tramite localStorage. Il progetto iOS salva invece nel dispositivo con protezione file.</div>
+    </div>
+  </section>
+</div>
+
+
+
+<nav id="bottomDock">
+  <div class="dockCluster dockLeft">
+    <button data-page="history" onclick="showPage(this)" aria-label="Pesi Registrati"><img src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2064%2048%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%273.2%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Crect%20x%3D%274%27%20y%3D%273%27%20width%3D%2716%27%20height%3D%2740%27%20rx%3D%271.5%27/%3E%3Crect%20x%3D%2724%27%20y%3D%273%27%20width%3D%2716%27%20height%3D%2740%27%20rx%3D%271.5%27/%3E%3Cg%20transform%3D%27rotate%28-15%2052%2024%29%27%3E%3Crect%20x%3D%2744%27%20y%3D%273%27%20width%3D%2716%27%20height%3D%2740%27%20rx%3D%271.5%27/%3E%3C/g%3E%3Cline%20x1%3D%278%27%20y1%3D%2712%27%20x2%3D%2716%27%20y2%3D%2712%27/%3E%3Cline%20x1%3D%278%27%20y1%3D%2718%27%20x2%3D%2716%27%20y2%3D%2718%27/%3E%3Cline%20x1%3D%278%27%20y1%3D%2724%27%20x2%3D%2716%27%20y2%3D%2724%27/%3E%3Cline%20x1%3D%278%27%20y1%3D%2730%27%20x2%3D%2716%27%20y2%3D%2730%27/%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2736%27%20r%3D%272.8%27/%3E%3Cline%20x1%3D%2728%27%20y1%3D%2712%27%20x2%3D%2736%27%20y2%3D%2712%27/%3E%3Cline%20x1%3D%2728%27%20y1%3D%2718%27%20x2%3D%2736%27%20y2%3D%2718%27/%3E%3Cline%20x1%3D%2728%27%20y1%3D%2724%27%20x2%3D%2736%27%20y2%3D%2724%27/%3E%3Cline%20x1%3D%2728%27%20y1%3D%2730%27%20x2%3D%2736%27%20y2%3D%2730%27/%3E%3Ccircle%20cx%3D%2732%27%20cy%3D%2736%27%20r%3D%272.8%27/%3E%3Cline%20x1%3D%2747%27%20y1%3D%2714%27%20x2%3D%2755%27%20y2%3D%2714%27/%3E%3Cline%20x1%3D%2747%27%20y1%3D%2720%27%20x2%3D%2755%27%20y2%3D%2720%27/%3E%3Cline%20x1%3D%2747%27%20y1%3D%2726%27%20x2%3D%2755%27%20y2%3D%2726%27/%3E%3Cline%20x1%3D%2747%27%20y1%3D%2732%27%20x2%3D%2755%27%20y2%3D%2732%27/%3E%3Ccircle%20cx%3D%2752%27%20cy%3D%2738%27%20r%3D%272.8%27/%3E%3C/svg%3E" class="navImg" alt=""></button>
+    <button data-page="coach" onclick="showPage(this)" aria-label="Coach AI"><img src="data:image/png;base64,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" class="navImg aiNavImg" alt=""></button>
+    <button data-page="settings" onclick="showPage(this)" aria-label="Altro"><img src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27black%27%3E%3Ccircle%20cx%3D%275%27%20cy%3D%2712%27%20r%3D%271.9%27/%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2712%27%20r%3D%271.9%27/%3E%3Ccircle%20cx%3D%2719%27%20cy%3D%2712%27%20r%3D%271.9%27/%3E%3C/svg%3E" class="navImg" alt=""></button>
+  </div>
+  <div class="dockCluster dockHome">
+    <button data-page="home" class="active homeBtn" onclick="showPage(this)" aria-label="Home"><img src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272.2%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M3%2011.5L12%204l9%207.5%27/%3E%3Cpath%20d%3D%27M5.5%2010.5V20h5.5v-5.8c0-.6.4-1%201-1h0c.6%200%201%20.4%201%201V20h5.5v-9.5%27/%3E%3C/svg%3E" class="navImg" alt=""></button>
+  </div>
+</nav>
+
+
+
+<div id="modal" class="modal" onclick="if(event.target===this)closeModal()">
+  <div class="sheet">
+    <div class="row between"><h2>Registra peso</h2><button class="secondary" onclick="closeModal()">Chiudi</button></div>
+    <div class="setting"><label>Data</label><input id="entryDate" type="date"></div>
+    <div class="setting"><label>Orario</label><input id="entryTime" type="time" value="07:00"></div>
+    <div class="setting"><label>Peso (kg)</label><input id="entryWeight" type="number" step="0.1" min="20" max="400" placeholder="72.0"></div>
+    <div class="setting"><label>Quando ti sei pesato?</label><select id="entryTiming"><option value="a digiuno">A digiuno</option><option value="in mattinata">In mattinata</option><option value="nel pomeriggio">Nel pomeriggio</option><option value="dopo allenamento">Dopo allenamento</option><option value="di sera">Di sera</option></select></div>
+    <div class="setting"><label>Nota opzionale</label><textarea id="entryNote" rows="3" placeholder="Es. cena più salata, viaggio..."></textarea></div>
+    <button class="primary" onclick="saveEntry()">Salva pesata</button>
+    <button id="deleteEntryBtn" class="secondary" style="display:none;margin-top:10px" onclick="deleteCurrentEntry()">Elimina pesata</button>
+    <div class="hint">Se esiste già una pesata per questa data, verrà aggiornata.</div>
+  </div>
+</div>
+
+<script>
+const KEY='pesoflow-preview-v093';
+const SETKEY='pesoflow-preview-settings-v093';
+let entries=JSON.parse(localStorage.getItem(KEY)||'[]');
+let settings=JSON.parse(localStorage.getItem(SETKEY)||'{"goalMode":"Osserva","targetWeight":"","targetDelta":"","targetMonthly":""}');
+let editingEntryDate = null;
+let expandedHistoryKey = null;
+let historyVisible = true;
+let navScrollTimer = null;
+
+function isoLocal(d){const x=new Date(d); x.setMinutes(x.getMinutes()-x.getTimezoneOffset()); return x.toISOString().slice(0,10)}
+function today(){return isoLocal(new Date())}
+function nowTime(){const d=new Date(); return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
+function entryTiming(e){if(e.timing) return e.timing; if(e.workout) return 'dopo allenamento'; if(e.fasting) return 'a digiuno'; return 'in mattinata';}
+function metricKg(value, d=2){return `<span class="metricValue"><span class="metricNumber">${fmt(value,d)}</span><span class="metricUnit">kg</span></span>`}
+function parseDate(s){return new Date(s+'T12:00:00')}
+function fmt(n,d=2){return Number(n).toLocaleString('it-IT',{minimumFractionDigits:d,maximumFractionDigits:d})}
+function parseDateTime(entry){return new Date(`${entry.date}T${entry.time||'07:00'}:00`)}
+function mondayOf(d){let x=new Date(d); x.setHours(12,0,0,0); let day=(x.getDay()+6)%7; x.setDate(x.getDate()-day); return x}
+function addDays(d,n){let x=new Date(d); x.setDate(x.getDate()+n); return x}
+function sameDay(a,b){return isoLocal(a)===isoLocal(b)}
+function weekEntries(date=new Date()){const m=mondayOf(date), end=addDays(m,7); return entries.filter(e=>{const d=parseDate(e.date);return d>=m&&d<end}).sort((a,b)=>a.date.localeCompare(b.date))}
+function avg(arr){return arr.length?arr.reduce((s,e)=>s+Number(e.weight),0)/arr.length:null}
+function previousWeekAvg(){const d=addDays(mondayOf(new Date()),-1); return avg(weekEntries(d))}
+function rolling(days){const end=new Date(); const start=addDays(end,-(days-1)); const arr=entries.filter(e=>parseDate(e.date)>=new Date(start.toDateString())&&parseDate(e.date)<=addDays(new Date(end.toDateString()),1));return avg(arr)}
+function confidence(n){return n>=6?'Copertura molto alta':n>=4?'Copertura buona':n>=2?'Copertura parziale':n===1?'1 sola rilevazione':'Nessuna rilevazione'}
+function sortedEntries(){return [...entries].sort((a,b)=>parseDateTime(b)-parseDateTime(a))}
+function latest(){return sortedEntries()[0]||null}
+
+function weeklyGroups(){
+ const map=new Map();
+ entries.forEach(e=>{const k=isoLocal(mondayOf(parseDate(e.date))); if(!map.has(k))map.set(k,[]);map.get(k).push(e)});
+ return [...map.entries()].map(([date,es])=>({date,avg:avg(es),count:es.length})).sort((a,b)=>a.date.localeCompare(b.date));
+}
+function status(){
+ const cur=weekEntries(), a=avg(cur), prev=previousWeekAvg(), delta=(a!=null&&prev!=null)?a-prev:null;
+ if(!entries.length)return {h:'Inizia dal primo dato',d:'Dopo alcune pesate separerò le oscillazioni giornaliere dal trend.'};
+ if(delta==null){
+   if(cur.length)return {h:'Media settimanale disponibile',d:`La media usa solo le ${cur.length} pesate registrate. I giorni mancanti non entrano nel calcolo.`};
+   return {h:'Nessun dato questa settimana',d:'Puoi saltare uno o più giorni: l’app riprende normalmente appena registri una nuova pesata.'};
+ }
+ const ds=(delta>=0?'+':'')+fmt(delta,2)+' kg';
+ const mode=settings.goalMode||'Osserva';
+ if(mode==='Osserva'){
+   const h=delta<=-.15?'Trend in discesa':delta>=.15?'Trend in salita':'Trend stabile';
+   return {h,d:`Media ${ds} rispetto alla settimana precedente. In modalità Osserva descrivo il trend senza giudicarlo.`};
+ }
+ if(mode==='Mantieni'){
+   return Math.abs(delta)<=.20?{h:'In linea con il mantenimento',d:`Variazione contenuta: ${ds}.`}:{h:'Fuori dalla fascia di mantenimento',d:`La media è cambiata di ${ds}. Guarda più settimane prima di concludere.`};
+ }
+ const wanted=Number(String(settings.targetDelta||'').replace(',','.'))||0;
+ const correct=(mode==='Dimagrisci'&&delta<0)||(mode==='Aumenta'&&delta>0);
+ if(!correct)return {h:'Trend non coerente con l’obiettivo impostato',d:`Media ${ds} rispetto alla precedente. Una sola settimana non basta per concludere.`};
+ const actual=Math.abs(delta);
+ if(wanted>0 && actual<wanted*.6)return {h:'Direzione corretta, ritmo più lento di quello impostato',d:`Media ${ds}.`};
+ if(wanted>0 && actual>wanted*1.6)return {h:'Ritmo più rapido di quello impostato',d:`Media ${ds}. Non stabilisco automaticamente se sia desiderabile.`};
+ return {h:'Trend coerente con l’obiettivo',d:`La media si sta muovendo nella direzione impostata (${ds}).`};
+}
+function renderAll(){
+ const l=latest(), cur=weekEntries(), a=avg(cur), s=status();
+ document.getElementById('latestWeight').innerHTML=(l?fmt(l.weight,1):'—')+' <span>kg</span>';
+ document.getElementById('latestDate').textContent=l?parseDate(l.date).toLocaleDateString('it-IT',{day:'numeric',month:'short'}):'—';
+ document.getElementById('weekAvg').innerHTML=a==null?'—':metricKg(a,2);
+ document.getElementById('coverage').textContent=cur.length+'/7';
+ const trendEl=document.getElementById('trendDetail'); if(trendEl) trendEl.textContent=s.h + '. ' + s.d;
+ const avg4 = rollingWeeklyAverage(4);
+ const avg4El = document.getElementById('rolling4weeks'); if(avg4El) avg4El.innerHTML=avg4==null?'—':metricKg(avg4,2);
+ document.getElementById('goalMode').value=settings.goalMode||'Osserva';
+ document.getElementById('targetWeight').value=settings.targetWeight||'';
+ document.getElementById('targetDelta').value=settings.targetDelta||'';
+ const monthlyTargetEl = document.getElementById('targetMonthly'); if(monthlyTargetEl) monthlyTargetEl.value=settings.targetMonthly||'';
+ applyTargetColors(a, avg4);
+ populateHistoryFilters();
+ renderWeekChart();renderHistoryChart();renderHistory();renderCoachStats();
+ const toggleBtn=document.getElementById('toggleHistoryVisibilityBtn'); if(toggleBtn) toggleBtn.textContent=historyVisible?'Nascondi pesi':'Mostra pesi';
+}
+
+
+
+function toNum(v){
+ const n = Number(String(v||'').replace(',','.'));
+ return Number.isFinite(n) ? n : null;
+}
+function applyTargetColors(weekAvg, avg4){
+ const weekTarget = toNum(settings.targetWeight);
+ const monthTarget = toNum(settings.targetMonthly);
+ const weekCard = document.getElementById('weekAvgCard');
+ const monthCard = document.getElementById('rolling4weeksCard');
+ if(weekCard){
+   weekCard.classList.remove('status-good','status-bad');
+   if(weekTarget!=null && weekAvg!=null){ weekCard.classList.add(weekAvg <= weekTarget ? 'status-good' : 'status-bad'); }
+ }
+ if(monthCard){
+   monthCard.classList.remove('status-good','status-bad');
+   if(monthTarget!=null && avg4!=null){ monthCard.classList.add(avg4 <= monthTarget ? 'status-good' : 'status-bad'); }
+ }
+}
+function getMonthKey(entry){ return entry.date.slice(0,7); }
+function getWeekKey(dateStr){ return isoLocal(mondayOf(parseDate(dateStr))); }
+function populateHistoryFilters(source=''){
+ const weekSel = document.getElementById('historyWeekFilter');
+ const monthSel = document.getElementById('historyMonthFilter');
+ if(!weekSel || !monthSel) return;
+ const currentWeek = weekSel.value || '';
+ const currentMonth = monthSel.value || '';
+ const allWeeks = [...new Set(entries.map(e=>getWeekKey(e.date)))].sort().reverse();
+ const allMonths = [...new Set(entries.map(e=>getMonthKey(e)))].sort().reverse();
+ let weekOptions = [...allWeeks];
+ let monthOptions = [...allMonths];
+ let nextWeek = currentWeek;
+ let nextMonth = currentMonth;
+
+ // Se selezioni una settimana, il menu Mese mostra solo i mesi toccati da quella settimana.
+ // Se la settimana è tutta nello stesso mese, seleziono quel mese.
+ // Se attraversa due mesi, "Tutti" rappresenta entrambi, senza creare una voce concatenata.
+ if((source === 'week' || (!source && currentWeek)) && currentWeek){
+   monthOptions = monthKeysForWeek(currentWeek);
+   nextMonth = monthOptions.length === 1 ? monthOptions[0] : '';
+ }
+
+ // Se selezioni un mese, mostra solo le settimane che toccano quel mese.
+ // Una settimana a cavallo tra due mesi compare correttamente in entrambi.
+ if(source === 'month' && currentMonth){
+   weekOptions = allWeeks.filter(w => monthKeysForWeek(w).includes(currentMonth));
+   if(nextWeek && !weekOptions.includes(nextWeek)) nextWeek = '';
+ }
+ if(!currentWeek && currentMonth){
+   weekOptions = allWeeks.filter(w => monthKeysForWeek(w).includes(currentMonth));
+ }
+
+ weekSel.innerHTML = '<option value="">Tutte</option>' + weekOptions.map(w=>`<option value="${w}">${formatWeekRange(w)}</option>`).join('');
+ monthSel.innerHTML = buildMonthOptions(monthOptions);
+ weekSel.value = weekOptions.includes(nextWeek) ? nextWeek : '';
+ monthSel.value = monthOptions.includes(nextMonth) ? nextMonth : '';
+}
+function formatMonthLabel(monthKey){
+ const [y,m] = monthKey.split('-').map(Number);
+ const d = new Date(y,m-1,1);
+ return d.toLocaleDateString('it-IT',{month:'long',year:'numeric'});
+}
+function monthKeysForWeek(weekStartISO){
+ const start = parseDate(weekStartISO);
+ const out = [];
+ for(let i=0;i<7;i++){
+   const d = addDays(start,i);
+   const mk = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+   if(!out.includes(mk)) out.push(mk);
+ }
+ return out;
+}
+function monthFilterKeys(value){
+ if(!value) return [];
+ if(value.startsWith('multi|')) return value.split('|').slice(1);
+ return [value];
+}
+function buildMonthOptions(keys){
+ return '<option value="">Tutti</option>' + keys.map(m=>`<option value="${m}">${formatMonthLabel(m)}</option>`).join('');
+}
+function resetHistoryFilters(silent=false){
+ const weekSel = document.getElementById('historyWeekFilter');
+ const monthSel = document.getElementById('historyMonthFilter');
+ if(!weekSel || !monthSel) return;
+ weekSel.value='';
+ monthSel.value='';
+ populateHistoryFilters();
+ if(!silent) renderHistory();
+}
+function onHistoryWeekChange(){ populateHistoryFilters('week'); renderHistory(); }
+function onHistoryMonthChange(){ populateHistoryFilters('month'); renderHistory(); }
+
+function renderCoachStats(){
+ const el = document.getElementById('coachQuickStats');
+ if(!el) return;
+ const cur = weekEntries();
+ const avgWeek = avg(cur);
+ const avg4 = rollingWeeklyAverage(4);
+ const coverage = cur.length + '/7';
+ const last = latest();
+ const prev = previousWeekAvg();
+ const delta = (avgWeek!=null && prev!=null) ? (avgWeek-prev) : null;
+ const ctx = detectContexts();
+ const smartHint = ctx.travel ? 'Viaggio' : ctx.weekend ? 'Weekend' : ctx.salt ? 'Ritenzione' : 'Routine';
+ const quality = cur.length >= 5 ? 'Alta' : cur.length >= 3 ? 'Media' : cur.length >= 1 ? 'Bassa' : 'In attesa';
+ const conf = document.getElementById('coachConfidence');
+ if(conf) conf.textContent = `Affidabilità analisi: ${quality}${cur.length ? ` • ${cur.length}/7 pesate questa settimana` : ''}`;
+ el.innerHTML = `
+   <div class="quickChip"><span class="label">Ultimo peso</span><b>${last ? fmt(last.weight,1)+' kg' : '—'}</b></div>
+   <div class="quickChip"><span class="label">Copertura</span><b>${coverage}</b></div>
+   <div class="quickChip"><span class="label">Media settimana</span><b>${avgWeek!=null ? fmt(avgWeek,2)+' kg' : '—'}</b></div>
+   <div class="quickChip"><span class="label">Media 4 settimane</span><b>${avg4!=null ? fmt(avg4,2)+' kg' : '—'}</b></div>
+   <div class="quickChip"><span class="label">Delta settimanale</span><b>${delta!=null ? ((delta>0?'+':'')+fmt(delta,2)+' kg') : '—'}</b></div>
+   <div class="quickChip"><span class="label">Insight</span><b>${smartHint}</b></div>`;
+}
+
+function rollingWeeklyAverage(weeks=4){
+ const g=weeklyGroups();
+ if(!g.length) return null;
+ const last = g.slice(-weeks);
+ return last.reduce((s,x)=>s+x.avg,0)/last.length;
+}
+
+
+function drawChart(svg, pts, options={}){
+ svg.innerHTML=`<defs>
+   <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#6ec4ff"/><stop offset="55%" stop-color="#79b8ff"/><stop offset="100%" stop-color="#9a86ff"/></linearGradient>
+   <linearGradient id="areaGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#72baff" stop-opacity=".24"/><stop offset="100%" stop-color="#8d7fff" stop-opacity="0"/></linearGradient>
+ </defs>`;
+ const width=360, height=230;
+ const left=42, right=12, top=14, bottom=30;
+ const plotW=width-left-right, plotH=height-top-bottom;
+ if(!pts.length){
+   svg.insertAdjacentHTML('beforeend','<text x="180" y="115" fill="#aab6c8" text-anchor="middle" font-size="13">Servono più dati</text>');
+   return;
+ }
+ let vals=pts.map(p=>p.v);
+ if(options.reference!=null) vals.push(options.reference);
+ if(options.target!=null) vals.push(options.target);
+ let min=Math.floor(Math.min(...vals));
+ let max=Math.ceil(Math.max(...vals));
+ if(max===min){min-=1;max+=1}
+ const range = max-min || 1;
+ const yFor=v => top + (max-v)/range*plotH;
+
+ for(let yVal=min; yVal<=max; yVal++){
+   const y = yFor(yVal);
+   svg.insertAdjacentHTML('beforeend',`<line class="gridline" x1="${left}" y1="${y}" x2="${width-right}" y2="${y}"/>`);
+   svg.insertAdjacentHTML('beforeend',`<text x="${left-7}" y="${y+4}" fill="#aab6c8" text-anchor="end" font-size="11">${yVal}</text>`);
+ }
+ const xLabelCount = options.fullWeek ? 7 : pts.length;
+ const weekLabels = ['L','M','M','G','V','S','D'];
+ for(let i=0;i<xLabelCount;i++){
+   const x = options.fullWeek ? (left + i*(plotW/6)) : (pts.length===1 ? left+plotW/2 : left + i*(plotW/Math.max(1,pts.length-1)));
+   svg.insertAdjacentHTML('beforeend',`<line class="gridline" x1="${x}" y1="${top}" x2="${x}" y2="${top+plotH}"/>`);
+   const text = options.fullWeek ? weekLabels[i] : (options.labels?.[i] || '');
+   svg.insertAdjacentHTML('beforeend',`<text x="${x}" y="${height-8}" fill="#aab6c8" text-anchor="middle" font-size="11">${text}</text>`);
+ }
+ if(options.reference!=null){
+   const y = yFor(options.reference);
+   svg.insertAdjacentHTML('beforeend',`<line class="avg" x1="${left}" x2="${width-right}" y1="${y}" y2="${y}"/>`);
+   svg.insertAdjacentHTML('beforeend',`<text x="${width-right}" y="${y-6}" fill="#aab6c8" text-anchor="end" font-size="11">${options.referenceLabel || ''}</text>`);
+ }
+ if(options.target!=null){
+   const y = yFor(options.target);
+   svg.insertAdjacentHTML('beforeend',`<line x1="${left}" x2="${width-right}" y1="${y}" y2="${y}" stroke="#ff5b5b" stroke-width="1.5" stroke-dasharray="7 5"/>`);
+   svg.insertAdjacentHTML('beforeend',`<text x="${left}" y="${y-6}" fill="#ff7b7b" text-anchor="start" font-size="11">${options.targetLabel || 'Target'}</text>`);
+ }
+ const grouped = new Map();
+ pts.forEach((p, idx)=>{
+   const key = p.segment ?? 0;
+   if(!grouped.has(key)) grouped.set(key, []);
+   const x = options.fullWeek ? (left + p.dayIndex*(plotW/6)) : (pts.length===1 ? left+plotW/2 : left + idx*(plotW/Math.max(1,pts.length-1)));
+   grouped.get(key).push({...p, x, y:yFor(p.v)});
+ });
+ for(const segPts of grouped.values()){
+   if(segPts.length > 1){
+     const d = segPts.map((p,i)=>(i?'L':'M')+p.x+' '+p.y).join(' ');
+     const areaD = `${d} L ${segPts[segPts.length-1].x} ${top+plotH} L ${segPts[0].x} ${top+plotH} Z`;
+     svg.insertAdjacentHTML('beforeend',`<path class="areaFill" d="${areaD}"/><path class="lineShadow" d="${d}"/><path class="line" d="${d}"/>`);
+   }
+ }
+ let tooltipGroup = null;
+ function showTooltip(x, y, text, goodState){
+   if(tooltipGroup) tooltipGroup.remove();
+   tooltipGroup = document.createElementNS('http://www.w3.org/2000/svg','g');
+   const bubbleW = Math.max(84, text.length * 6.6 + 16);
+   const bubbleH = 28;
+   const bx = Math.max(6, Math.min(width-bubbleW-6, x - bubbleW/2));
+   const by = Math.max(6, y - 40);
+   const rect = document.createElementNS('http://www.w3.org/2000/svg','rect');
+   rect.setAttribute('x', bx); rect.setAttribute('y', by); rect.setAttribute('rx', 14); rect.setAttribute('ry', 14); rect.setAttribute('width', bubbleW); rect.setAttribute('height', bubbleH); rect.setAttribute('class', 'tooltipRect ' + (goodState===true?'goodStroke':goodState===false?'badStroke':''));
+   const stem = document.createElementNS('http://www.w3.org/2000/svg','path');
+   stem.setAttribute('d', `M ${x-6} ${by+bubbleH-1} L ${x} ${by+bubbleH+7} L ${x+6} ${by+bubbleH-1}`);
+   stem.setAttribute('fill','rgba(12,20,32,.94)'); stem.setAttribute('stroke', goodState===true?'rgba(110,240,166,.65)':goodState===false?'rgba(255,138,138,.65)':'rgba(255,255,255,.16)'); stem.setAttribute('stroke-width','1');
+   const textEl = document.createElementNS('http://www.w3.org/2000/svg','text');
+   textEl.setAttribute('x', bx + bubbleW/2); textEl.setAttribute('y', by + 18); textEl.setAttribute('text-anchor','middle'); textEl.setAttribute('class', 'tooltipText ' + (goodState===true?'goodText':goodState===false?'badText':'')); textEl.textContent = text;
+   tooltipGroup.appendChild(rect); tooltipGroup.appendChild(stem); tooltipGroup.appendChild(textEl); svg.appendChild(tooltipGroup);
+ }
+ pts.forEach((p, idx)=>{
+   const x = options.fullWeek ? (left + p.dayIndex*(plotW/6)) : (pts.length===1 ? left+plotW/2 : left + idx*(plotW/Math.max(1,pts.length-1)));
+   const y = yFor(p.v);
+   const halo = document.createElementNS('http://www.w3.org/2000/svg','circle');
+   halo.setAttribute('class','pointHalo ' + (p.good===true?'haloGood':p.good===false?'haloBad':'haloNeutral'));
+   halo.setAttribute('cx',x); halo.setAttribute('cy',y); halo.setAttribute('r',10); svg.appendChild(halo);
+   const circle = document.createElementNS('http://www.w3.org/2000/svg','circle');
+   circle.setAttribute('class','point ' + (p.good===true?'goodPoint':p.good===false?'badPoint':'neutralPoint'));
+   circle.setAttribute('cx',x); circle.setAttribute('cy',y); circle.setAttribute('r',5); circle.style.cursor='pointer';
+   circle.addEventListener('click', (ev)=>{ ev.stopPropagation(); showTooltip(x, y, p.info, p.good); });
+   svg.appendChild(circle);
+ });
+ svg.addEventListener('click', ()=>{ if(tooltipGroup){ tooltipGroup.remove(); tooltipGroup = null; }});
+}
+
+function renderWeekChart(){
+ const m=mondayOf(new Date()), es=weekEntries();
+ const sorted=[...es].sort((a,b)=>a.date.localeCompare(b.date));
+ const targetRaw = Number(String(settings.targetWeight||'').replace(',','.'));
+ const target = Number.isFinite(targetRaw) && targetRaw > 0 ? targetRaw : null;
+ let pts=[], segment=0;
+ for(let i=0;i<sorted.length;i++){
+   if(i>0){
+     const prev=parseDate(sorted[i-1].date), cur=parseDate(sorted[i].date);
+     const gap=Math.round((cur-prev)/(1000*60*60*24));
+     if(gap>1) segment++;
+   }
+   const d=parseDate(sorted[i].date);
+   const dayIndex=Math.round((d-m)/(1000*60*60*24));
+   pts.push({
+     v:Number(sorted[i].weight),
+     dayIndex,
+     segment,
+     info:`${fmt(sorted[i].weight,2)} kg`,
+     good:(target!=null ? Number(sorted[i].weight) <= target : null)
+   });
+ }
+ const latestEntry = latest();
+ const recentWeight = latestEntry ? Number(latestEntry.weight) : null;
+ drawChart(document.getElementById('weekChart'), pts, {
+   reference: recentWeight,
+   referenceLabel: 'Peso recente',
+   target: target,
+   targetLabel: 'Target sett.',
+   fullWeek: true,
+   infoTarget: 'weekChartInfo'
+ });
+}
+
+function renderHistoryChart(){
+ const g=weeklyGroups().slice(-10);
+ const monthlyTargetRaw = Number(String(settings.targetMonthly||'').replace(',','.'));
+ const monthlyTarget = Number.isFinite(monthlyTargetRaw) && monthlyTargetRaw > 0 ? monthlyTargetRaw : null;
+ const pts=g.map((x, idx)=>({
+   v:x.avg,
+   segment:0,
+   info:`${fmt(x.avg,2)} kg • ${formatWeekRange(x.date)}`,
+   good:(monthlyTarget!=null ? x.avg <= monthlyTarget : null)
+ }));
+ drawChart(document.getElementById('historyChart'), pts, {
+   labels:g.map(x=>shortWeekLabel(x.date)),
+   target: monthlyTarget,
+   targetLabel: 'Target mese',
+   infoTarget: 'historyChartInfo'
+ });
+}
+
+function shortWeekLabel(weekStartISO){
+ const start = parseDate(weekStartISO);
+ return start.toLocaleDateString('it-IT',{day:'numeric',month:'numeric'});
+}
+
+function formatWeekRange(weekStartISO){
+ const start = parseDate(weekStartISO);
+ const end = addDays(start, 6);
+ const fmtOpts = {day:'numeric', month:'short'};
+ return `${start.toLocaleDateString('it-IT', fmtOpts)}–${end.toLocaleDateString('it-IT', fmtOpts)}`;
+}
+
+
+function getFilteredEntries(){
+ const weekFilter = document.getElementById('historyWeekFilter')?.value || '';
+ const monthFilter = document.getElementById('historyMonthFilter')?.value || '';
+ const activeMonths = monthFilterKeys(monthFilter);
+ return sortedEntries().filter(e => {
+   const okWeek = !weekFilter || getWeekKey(e.date) === weekFilter;
+   const okMonth = !activeMonths.length || activeMonths.includes(getMonthKey(e));
+   return okWeek && okMonth;
+ });
+}
+function renderHistory(){
+ const el=document.getElementById('historyList');
+ if(!historyVisible){
+   el.innerHTML='<div class="historyHiddenState">I pesi registrati sono nascosti. Tocca “Mostra pesi” per visualizzarli.</div>';
+   return;
+ }
+ const list=getFilteredEntries();
+ if(!list.length){el.innerHTML='<div class="empty">Nessuna pesata registrata per i filtri selezionati.</div>';return}
+ el.innerHTML=list.map(e=>{
+   const dt = parseDateTime(e);
+   const timing = entryTiming(e);
+   return `<div class="historyItem">
+      <div class="historySummary">
+        <div class="historyMain">
+          <strong>${dt.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'})}</strong>
+          <small>${(e.time||'07:00')} • ${timing.charAt(0).toUpperCase()+timing.slice(1)}</small>
+          ${e.note ? `<div class="historyNote">${e.note}</div>` : ''}
+        </div>
+        <div class="historyRight">
+          <div class="historyWeight">${fmt(e.weight,1)} kg</div>
+          <button class="historyEditBtn" title="Modifica" onclick="editEntry('${e.date}','${(e.time||'07:00')}')">✎</button>
+        </div>
+      </div>
+    </div>`
+ }).join('');
+}
+function toggleHistoryVisibility(){
+ historyVisible = !historyVisible;
+ const toggleBtn=document.getElementById('toggleHistoryVisibilityBtn');
+ if(toggleBtn) toggleBtn.textContent=historyVisible?'Nascondi pesi':'Mostra pesi';
+ renderHistory();
+}
+function openModal(){
+ document.getElementById('entryDate').value=today();
+ document.getElementById('entryTime').value=nowTime();
+ document.getElementById('entryWeight').value='';
+ document.getElementById('entryTiming').value='a digiuno';
+ document.getElementById('entryNote').value='';
+ editingEntryDate = null;
+ document.getElementById('deleteEntryBtn').style.display='none';
+ document.getElementById('modal').classList.add('open');
+}
+function closeModal(){
+ document.getElementById('modal').classList.remove('open');
+ editingEntryDate = null;
+}
+document.getElementById('entryDate').addEventListener('change',loadForDate);
+document.getElementById('entryTime').addEventListener('change',loadForDate);
+function loadForDate(){
+ const d=document.getElementById('entryDate').value;
+ const t=document.getElementById('entryTime').value || '07:00';
+ const e=entries.find(x=>x.date===d && (x.time||'07:00')===t);
+ document.getElementById('entryWeight').value=e?e.weight:'';
+ document.getElementById('entryTiming').value=e?entryTiming(e):'a digiuno';
+ document.getElementById('entryNote').value=e?e.note||'':'';
+ document.getElementById('deleteEntryBtn').style.display=e?'block':'none';
+}
+function saveEntry(){
+ const date=document.getElementById('entryDate').value, time=document.getElementById('entryTime').value || '07:00', weight=Number(document.getElementById('entryWeight').value), timing=document.getElementById('entryTiming').value || 'a digiuno';
+ if(!date||!weight||weight<20||weight>400){alert('Inserisci un peso valido.');return}
+ const e={date,time,weight,timing,fasting:timing==='a digiuno',workout:timing==='dopo allenamento',note:document.getElementById('entryNote').value};
+ entries=entries.filter(x=>!(x.date===date && (x.time||'07:00')===time));
+ if(editingEntryDate){ entries=entries.filter(x=>!(x.date===editingEntryDate.date && (x.time||'07:00')===editingEntryDate.time)); }
+ entries.push(e);
+ localStorage.setItem(KEY,JSON.stringify(entries));
+ closeModal();renderAll()
+}
+function editEntry(date, time){
+ const e = entries.find(x=>x.date===date && (x.time||'07:00')===time);
+ if(!e) return;
+ editingEntryDate = {date, time};
+ document.getElementById('entryDate').value = e.date;
+ document.getElementById('entryTime').value = e.time || '07:00';
+ document.getElementById('entryWeight').value = e.weight;
+ document.getElementById('entryTiming').value = entryTiming(e);
+ document.getElementById('entryNote').value = e.note || '';
+ document.getElementById('deleteEntryBtn').style.display='block';
+ document.getElementById('modal').classList.add('open');
+}
+function deleteCurrentEntry(){
+ if(!editingEntryDate) return;
+ entries = entries.filter(x=>!(x.date===editingEntryDate.date && (x.time||'07:00')===editingEntryDate.time));
+ localStorage.setItem(KEY,JSON.stringify(entries));
+ closeModal();renderAll();
+}
+function showPage(btn){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.querySelectorAll('#bottomDock button').forEach(x=>x.classList.remove('active'));document.getElementById(btn.dataset.page).classList.add('active');btn.classList.add('active')}
+function saveSettings(){settings={goalMode:document.getElementById('goalMode').value,targetWeight:document.getElementById('targetWeight').value,targetDelta:document.getElementById('targetDelta').value,targetMonthly:(document.getElementById('targetMonthly')?.value||'')};localStorage.setItem(SETKEY,JSON.stringify(settings))}
+function detectContexts(){
+ const recent = sortedEntries().slice(0,21);
+ const notes = recent.map(e=>(e.note||'').toLowerCase());
+ const joined = notes.join(' | ');
+ return {
+   travel: /(viaggio|aereo|hotel|vacanza|trasferta)/.test(joined),
+   weekend: /(weekend|sabato|domenica|aperitivo|pizza|ristorante)/.test(joined),
+   salt: /(sale|salato|sushi|pizza|cena fuori)/.test(joined),
+   lowSleep: /(poco sonno|dormito male|insonnia)/.test(joined),
+   workout: recent.some(e=>e.workout),
+   fasting: recent.some(e=>e.fasting)
+ };
+}
+function weekendPattern(){
+ const recent = sortedEntries().slice(0,30);
+ const weekend = recent.filter(e=>{const d=parseDate(e.date).getDay(); return d===0 || d===6;}).map(e=>Number(e.weight));
+ const weekdays = recent.filter(e=>{const d=parseDate(e.date).getDay(); return d!==0 && d!==6;}).map(e=>Number(e.weight));
+ if(!weekend.length || !weekdays.length) return null;
+ return weekend.reduce((a,b)=>a+b,0)/weekend.length - weekdays.reduce((a,b)=>a+b,0)/weekdays.length;
+}
+function variabilityDays(days=14){
+ const arr = sortedEntries().slice(0,days).map(e=>Number(e.weight));
+ if(arr.length < 2) return null;
+ const mean = arr.reduce((a,b)=>a+b,0)/arr.length;
+ const variance = arr.reduce((s,v)=>s+Math.pow(v-mean,2),0)/arr.length;
+ return Math.sqrt(variance);
+}
+function goalSummary(){
+ const s = status();
+ const goalMode = settings.goalMode || 'Osserva';
+ if(goalMode === 'Osserva') return 'Sei in modalità Osserva: interpreto i dati senza giudizi rigidi.';
+ if(goalMode === 'Mantieni') return s.h.includes('mantenimento') || s.h.includes('In linea') ? 'Sei vicino alla fascia di mantenimento impostata.' : 'In questo momento non sei perfettamente nella fascia di mantenimento.';
+ if(goalMode === 'Dimagrisci') return s.h.includes('coerente') || s.h.includes('corretta') ? 'Il trend è coerente con un obiettivo di discesa.' : 'Il trend attuale non è pienamente coerente con un obiettivo di discesa.';
+ if(goalMode === 'Aumenta') return s.h.includes('coerente') || s.h.includes('corretta') ? 'Il trend è coerente con un obiettivo di aumento.' : 'Il trend attuale non è pienamente coerente con un obiettivo di aumento.';
+ return s.h;
+}
+function askCoach(){
+ const inp=document.getElementById('chatInput'),q=inp.value.trim(); if(!q)return;
+ const chat=document.getElementById('chat');
+ chat.insertAdjacentHTML('beforeend',`<div class="bubble me">${q.replace(/[<>&]/g,'')}</div>`);
+ inp.value='';
+
+ const s=status(), cur=weekEntries(), avgWeek=avg(cur), avg4=rollingWeeklyAverage(4), prev=previousWeekAvg();
+ const coverage=cur.length;
+ const ctx=detectContexts();
+ const weekendBias = weekendPattern();
+ const variability = variabilityDays();
+ const last=latest();
+ const parts = [];
+ if(last) parts.push(`Ultima pesata: <strong>${fmt(last.weight,1)} kg</strong> (${parseDate(last.date).toLocaleDateString('it-IT',{day:'numeric',month:'short'})}${last.time ? ' • '+last.time : ''}).`);
+ if(avgWeek!=null) parts.push(`Media della settimana: <strong>${fmt(avgWeek,2)} kg</strong> su <strong>${coverage}/7</strong> giorni registrati.`);
+ if(avg4!=null) parts.push(`Media 4 settimane: <strong>${fmt(avg4,2)} kg</strong>.`);
+ if(prev!=null && avgWeek!=null) parts.push(`Differenza dalla settimana precedente: <strong>${(avgWeek-prev)>=0?'+':''}${fmt(avgWeek-prev,2)} kg</strong>.`);
+ parts.push(`${s.h}. ${s.d}`);
+ parts.push(goalSummary());
+
+ const obs = [];
+ if(coverage <= 2) obs.push("Copertura bassa: il trend c’è, ma lo leggerei con prudenza.");
+ else if(coverage <= 4) obs.push("Copertura parziale ma già utile.");
+ else obs.push("Copertura buona: la media è abbastanza rappresentativa.");
+ if(variability != null){
+   if(variability > 0.65) obs.push("Vedo oscillazioni ampie: potrebbero dipendere da contesto, ritenzione o routine irregolare.");
+   else if(variability < 0.25) obs.push("Le oscillazioni sono contenute: il peso si muove in modo piuttosto pulito.");
+ }
+ if(weekendBias != null){
+   if(weekendBias > 0.35) obs.push("Il weekend nel tuo storico recente tende ad alzare il peso medio.");
+   else if(weekendBias < -0.2) obs.push("Non vedo un impatto negativo del weekend nel tuo storico recente.");
+ }
+ if(ctx.travel) obs.push("Hai note compatibili con viaggi o vacanze: in questi casi conta di più la media di più giorni.");
+ if(ctx.weekend) obs.push("Hai note che suggeriscono pasti sociali o weekend più liberi: una salita breve dopo questi giorni non è per forza negativa.");
+ if(ctx.salt) obs.push("Se ci sono stati pasti salati, il peso può restare alto 24–72 ore senza rappresentare grasso reale.");
+ if(ctx.lowSleep) obs.push("Il poco sonno può alterare fame, ritenzione e variabilità del peso.");
+ if(ctx.workout) obs.push("Le pesate post workout possono essere più variabili del solito.");
+
+ const tips = [];
+ if(/weekend|sabato|domenica|fuori|ristorante|pizza|aperitivo/i.test(q) || ctx.weekend){ tips.push("Dopo un weekend più abbondante guarda 2–3 pesate consecutive, non una soltanto."); }
+ if(/viaggio|vacanza|trasferta/i.test(q) || ctx.travel){ tips.push("Dopo un viaggio, ristabilisci routine, acqua e orari per 3–4 giorni prima di giudicarti."); }
+ if(/sale|salato|gonfio|gonfiore/i.test(q) || ctx.salt){ tips.push("Se sospetti ritenzione, confronta la media settimanale invece del singolo numero del giorno dopo."); }
+ if(/obiettivo|target|bene|male|come sto/i.test(q)){ tips.push("La risposta migliore viene dal confronto tra media e target, non dalla singola pesata."); }
+ if(coverage < 4){ tips.push("Se riesci, prova a coprire almeno 4 giorni a settimana in condizioni simili."); }
+ if(!tips.length){ tips.push("Scrivi nelle note quando ci sono weekend, cene fuori, viaggi, poco sonno o allenamenti intensi: il coach diventa molto più preciso."); tips.push("Puoi chiedermi anche: “sto trattenendo liquidi?”, “il weekend mi sposta davvero la media?”, “sono in linea col target?”"); }
+
+ const priority = tips.slice(0,2);
+ const monitor = coverage >= 3 ? 'Guarda le prossime 2–3 pesate prima di cambiare interpretazione del trend.' : 'Prima di trarre conclusioni, prova ad aggiungere almeno altre 2 pesate in condizioni simili.';
+ const answer = `<div><strong>Lettura rapida</strong><br>${parts.join('<br>')}</div><div style="margin-top:8px"><strong>Perché</strong><br>${obs.map(x=>'• '+x).join('<br>')}</div><div style="margin-top:8px"><strong>Priorità adesso</strong><br>${priority.map(x=>'• '+x).join('<br>')}</div><div style="margin-top:8px"><strong>Prossime 72 ore</strong><br>• ${monitor}</div><div style="margin-top:8px"><strong>Cosa fare ora</strong><br>${tips.map(x=>'• '+x).join('<br>')}</div>`;
+ chat.insertAdjacentHTML('beforeend',`<div class="bubble bot">${answer}</div>`);
+ chat.lastElementChild.scrollIntoView({behavior:'smooth'});
+}
+function exportBackup(){
+ const data={version:2,exportedAt:new Date().toISOString(),entries,settings}; const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='PesoFlow-Backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)
+}
+function importBackup(ev){
+ const f=ev.target.files[0]; if(!f)return; const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d.entries))throw 0;entries=d.entries;settings=d.settings||settings;localStorage.setItem(KEY,JSON.stringify(entries));localStorage.setItem(SETKEY,JSON.stringify(settings));renderAll();alert('Backup importato.')}catch(e){alert('Backup non valido.')}};r.readAsText(f)
+}
+
+function useCoachPrompt(text){ const input=document.getElementById('chatInput'); if(!input) return; input.value=text; input.focus(); }
+document.addEventListener('pointerdown', (e) => {
+ const btn = e.target.closest('#bottomDock button');
+ if(!btn) return;
+ btn.classList.remove('ripple');
+ void btn.offsetWidth;
+ btn.classList.add('ripple');
+});
+window.addEventListener('scroll', ()=>{ const nav=document.getElementById('bottomDock'); if(!nav) return; nav.classList.add('dockHidden'); clearTimeout(navScrollTimer); navScrollTimer=setTimeout(()=>nav.classList.remove('dockHidden'), 160); }, {passive:true});
+function updateLiveClock(){
+ const now = new Date();
+ const dateText = now.toLocaleDateString('it-IT',{
+   weekday:'short',
+   day:'numeric',
+   month:'long',
+   year:'numeric'
+ });
+ const hh=String(now.getHours()).padStart(2,'0'); const mm=String(now.getMinutes()).padStart(2,'0'); const ss=String(now.getSeconds()).padStart(2,'0'); const timeText = `${hh} : ${mm} : ${ss}`;
+ const dateEl = document.getElementById('liveDate');
+ const timeEl = document.getElementById('liveTime');
+ if(dateEl) dateEl.textContent = dateText;
+ if(timeEl) timeEl.textContent = timeText;
+}
+
+updateLiveClock();
+window.setInterval(updateLiveClock, 1000);
+window.addEventListener('pagehide', ()=>resetHistoryFilters(true));
+window.addEventListener('pageshow', ()=>{ resetHistoryFilters(true); const input=document.getElementById('chatInput'); if(input && !input.value.trim()) input.value='Come devo leggere il peso di oggi?'; });
+
+renderAll();
+resetHistoryFilters(true);
+renderHistory();
+const chatInputEl = document.getElementById('chatInput'); if(chatInputEl && !chatInputEl.value.trim()) chatInputEl.value='Come devo leggere il peso di oggi?';
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
+}
+</script>
+</body></html>
